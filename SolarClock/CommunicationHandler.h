@@ -1,8 +1,7 @@
 #ifndef COMMUNICATION_HANDLER_H
 #define COMMUNICATION_HANDLER_H
 
-#include <Ethernet.h>
-
+#include "Ethernet.h"
 #include "SPI.h"
 #include "Arduino.h"
 
@@ -35,21 +34,21 @@ public:
   	void SetIsAllowedToRequestEnergy(bool allowed);
 
 private:
-    uint8_t mac[];
-    String server;
-    String sas;
-    String serviceNamespace;
-    String hubName;
-    String deviceName;
+    byte mac[6];
+    char *server;
+    char *sas;
+    char *serviceNamespace;
+    char *hubName;
+    char *deviceName;
 
-    // //EthernetClient client;
-    // char buffer[64];
+    EthernetClient client;
+    char buffer[64];
 
-    // int energys[MotorCount];
-    // int currentMotor;
-    // String localTime;
+    int energys[MotorCount];
+    int currentMotor;
+    String localTime;
 
-    // bool isAllowedToRequestEnergy;
+    bool isAllowedToRequestEnergy;
 };
 
 
