@@ -1,4 +1,3 @@
-
 #include "SolarClock.h"
 #include "DataHandler.h"
 
