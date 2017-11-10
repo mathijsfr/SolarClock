@@ -4,6 +4,8 @@
 #include "IMotor.h"
 #include "Timer.h"
 
+#include "Arduino.h"
+
 class Motor : public iMotor
 {
 public:

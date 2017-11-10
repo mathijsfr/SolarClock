@@ -3,13 +3,14 @@
 
 #include "DataHandler.h"
 #include "Motor.h"
+#include "Arduino.h"
 
 #define MotorCount 12
 
 class BarHandler
 {
 public:
-    BarHandler(int* motorPins, DataHandler& datahandler);
+    BarHandler(int* motorPins, DataHandler& dataHandler);
     ~BarHandler();
 
     int CalculateTimeCounter(int energy);
@@ -24,7 +25,7 @@ public:
 private:
     Motor* motors[MotorCount];
     bool barsReset;
-    DataHandler& datahandler;
+    DataHandler& dataHandler;
 
 
 };

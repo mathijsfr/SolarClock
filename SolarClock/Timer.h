@@ -1,6 +1,8 @@
 #ifndef TIMER_H
 #define TIMER_H
 
+#include "Arduino.h"
+
 typedef void (*callbackFunction)(void);
 
 class Timer

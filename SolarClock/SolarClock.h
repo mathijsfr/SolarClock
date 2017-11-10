@@ -7,6 +7,8 @@
 #include "CommunicationHandler.h"
 #include "WatchDogTimer.h"
 
+#include "Arduino.h"
+
 class SolarClock
 {
 public:

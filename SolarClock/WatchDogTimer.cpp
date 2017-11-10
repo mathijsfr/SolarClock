@@ -12,12 +12,12 @@ void WatchDogTimer::UpdateWatchDogCounter()
 }
 
 
-void WatchDogTimer::CalculateWatchDog()
+void WatchDogTimer::CalculateWatchDog(String localTime)
 {
 
 }
 
-void WatchDogTimer::EnableWatchDog()
+void WatchDogTimer::EnableWatchDog(bool enable)
 {
 	
 }

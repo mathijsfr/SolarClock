@@ -1,8 +1,6 @@
 #ifndef COMMUNICATION_HANDLER_H
 #define COMMUNICATION_HANDLER_H
 
-#include <SPI.h>
-#include <Ethernet.h>
 
 #include "Arduino.h"
 
@@ -13,21 +11,21 @@ class CommunicationHandler
 public:
     CommunicationHandler();
 
-    void ConnectToServer();
+    int ConnectToServer();
 
-    void RequestIsAllowed();
+    int RequestIsAllowed();
 
     // request energy zet current motor goed aan de hand van interval
     // en zet het energie op de goede index aan de hand van de current motor
-    void RequestEnergy(); 
+    int RequestEnergy(); 
 
     // request local time zet local time in localTime
-    void RequestLocalTime();
+    int RequestLocalTime();
 
     // request all data zet goede data in de velden
-    void RequestAllData();
+    int RequestAllData();
 
-    const int* GetEnergys() const;
+    const int* GetEnergies() const;
     int GetCurrentMotor() const;
   	String GetLocalTime() const;
   	bool GetIsAllowedToRequestEnergy() const;
@@ -35,21 +33,21 @@ public:
   	void SetIsAllowedToRequestEnergy(bool allowed);
 
 private:
-    uint8_t mac[];
-    const char *server;
-    const char *sas;
-    const char *serviceNamespace;
-    const char *hubName;
-    const char *deviceName;
+    // uint8_t mac[];
+    // const char *server;
+    // const char *sas;
+    // const char *serviceNamespace;
+    // const char *hubName;
+    // const char *deviceName;
 
-    EthernetClient client;
-    char buffer[64];
+    // //EthernetClient client;
+    // char buffer[64];
 
-    int energys[MotorCount];
-    int currentMotor;
-    String localTime;
+    // int energys[MotorCount];
+    // int currentMotor;
+    // String localTime;
 
-    bool isAllowedToRequestEnergy;
+    // bool isAllowedToRequestEnergy;
 };
 
 

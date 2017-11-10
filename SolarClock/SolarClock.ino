@@ -4,15 +4,14 @@
 #define MotorCount 12
 
 int motorPins[MotorCount] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
-DataHandler dataHandler = new DataHandler();
-BarHandler barhandler = new BarHandler(motorPins, &dataHandler);
+DataHandler* dataHandler = new DataHandler();
+BarHandler* barhandler = new BarHandler(motorPins, *dataHandler);
 
-CommunicationHandler communicationHandler = new CommunicationHandler();
-WatchDogTimer watchDogTimer = new WatchDogTimer();
+CommunicationHandler* communicationHandler = new CommunicationHandler();
+WatchDogTimer* watchDogTimer = new WatchDogTimer();
 
-solarClock = new SolarClock(&barhandler, &communicationHandler, &watchDogTimer);
+SolarClock* solarClock = new SolarClock(*barhandler, *communicationHandler, *watchDogTimer);
 
-Events ev;
 
 void setup()
 {
@@ -21,6 +20,11 @@ void setup()
 
 void loop()
 {
-	solarClock.HandleEvent(ev);
+	Events ev = GetEvent();
+	solarClock->HandleEvent(ev);
 }
 
+Events GetEvent()
+{
+
+}
