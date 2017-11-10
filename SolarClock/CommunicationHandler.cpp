@@ -28,7 +28,7 @@ void CommunicationHandler::SetDataNotReceived(bool dataNotReceived)
 
 void CommunicationHandler::SetIsAllowedToRequestEnergy(bool allowed)
 {
-
+	isAllowedToRequestEnergy = allowed;
 }
 
 bool CommunicationHandler::GetDataReceived() const
@@ -43,27 +43,27 @@ bool CommunicationHandler::GetDataNotReceived() const
 
 int CommunicationHandler::GetNumberOfIPRequests() const
 {
-
+	return numberOfDHCPRequests;
 }
 
 const int* CommunicationHandler::GetEnergies() const
 {
-	
+	return energies;
 }
 
-void CommunicationHandler::GetCurrentMotor() const
+int CommunicationHandler::GetCurrentMotor() const
 {
-
+	return currentMotor;
 }
 
 String CommunicationHandler::GetLocalTime() const
 {
-
+	return localTime;
 }
 
 bool CommunicationHandler::GetIsAllowedToRequestEnergy() const
 {
-
+	return isAllowedToRequestEnergy;
 }
 
 void CommunicationHandler::RequestDHCP()

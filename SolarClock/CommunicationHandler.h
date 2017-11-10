@@ -22,7 +22,7 @@ public:
 
     int GetNumberOfIPRequests() const;
     const int* GetEnergies() const;
-    void GetCurrentMotor() const;
+    int GetCurrentMotor() const;
     String GetLocalTime() const;
     bool GetIsAllowedToRequestEnergy() const;
 
@@ -49,7 +49,7 @@ private:
     char deviceName;
     EthernetClient client;
 
-    int energys[MotorCount];
+    int energies[MotorCount];
     int currentMotor;
     bool isAllowedToRequestEnergy;
     String localTime;
