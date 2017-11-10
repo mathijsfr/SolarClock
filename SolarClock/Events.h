@@ -9,7 +9,8 @@ enum Events
     EV_BAR_SET,
     EV_WATCHDOG_DONE,
     EV_WATCHDOG_TICKED,
-    EV_TIME_UP
+    EV_TIME_UP,
+    NO_EVENT
 };
 
 #endif

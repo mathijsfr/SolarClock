@@ -8,7 +8,8 @@ class Motor : public iMotor
 {
 public:
     Motor(int pin);
-
+    ~Motor();
+    
   	void On();
   	void Off();
 

@@ -10,6 +10,7 @@ class BarHandler
 {
 public:
     BarHandler(int* motorPins, DataHandler& datahandler);
+    ~BarHandler();
 
     int CalculateTimeCounter(int energy);
     int* CalculateTimeCounters(int* energies, int count);

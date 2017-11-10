@@ -1,9 +1,6 @@
 #ifndef COMMUNICATION_HANDLER_H
 #define COMMUNICATION_HANDLER_H
 
-#include <SPI.h>
-#include <Ethernet.h>
-
 #include "Arduino.h"
 
 #define MotorCount 12
@@ -12,8 +9,6 @@ class CommunicationHandler
 {
 public:
     CommunicationHandler();
-
-    void ConnectToServer();
 
     void RequestIsAllowed();
 
@@ -27,7 +22,7 @@ public:
     // request all data zet goede data in de velden
     void RequestAllData();
 
-    const int* GetEnergys() const;
+    const int* GetEnergies() const;
     int GetCurrentMotor() const;
   	String GetLocalTime() const;
   	bool GetIsAllowedToRequestEnergy() const;
@@ -35,21 +30,12 @@ public:
   	void SetIsAllowedToRequestEnergy(bool allowed);
 
 private:
-    uint8_t mac[];
-    const char *server;
-    const char *sas;
-    const char *serviceNamespace;
-    const char *hubName;
-    const char *deviceName;
-
-    EthernetClient client;
-    char buffer[64];
-
-    int energys[MotorCount];
+    int energies[MotorCount];
     int currentMotor;
     String localTime;
 
     bool isAllowedToRequestEnergy;
+
 };
 
 
