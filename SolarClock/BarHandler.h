@@ -21,6 +21,9 @@ public:
     void SetAllBars(int* timeCounters, int count);
 
     bool GetBarsReset() const;
+    const Motor* GetMotor(int motorIndex) const;
+
+    void SetBarsReset(bool barsReset);
 
 private:
     Motor* motors[MotorCount];

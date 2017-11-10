@@ -12,8 +12,14 @@ public:
     void CalculateWatchDog(String localTime);
     void EnableWatchDog(bool enable);
 
+    int GetWatchDogCounter() const;
+    int GetWatchDogTicked() const;
+
+    void SetWatchDogTicked(bool watchDogTicked);
+
 private:
     int watchDogCounter;
+    bool watchDogTicked;
 
 };
 

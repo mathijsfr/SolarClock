@@ -38,3 +38,8 @@ const Timer* Motor::GetTimer() const
 {
 	return timer;
 }
+
+void Motor::SetMotorFinished(bool motorFinished)
+{
+	this->motorFinished = motorFinished;
+}

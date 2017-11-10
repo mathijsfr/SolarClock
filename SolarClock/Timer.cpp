@@ -18,6 +18,12 @@ void Timer::CheckTimer()
 {
 	if (startTime != -1 || timerDuration != -1 || setMotorOff != NULL)
 	{
-		
+		if (startTime + timerDuration <= millis())
+		{
+			setMotorOff();
+			startTime = -1;
+			timerDuration = -1;
+			setMotorOff = NULL;
+		}
 	}
 }

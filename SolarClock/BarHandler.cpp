@@ -51,5 +51,15 @@ void BarHandler::SetAllBars(int* timeCounters, int count)
 
 bool BarHandler::GetBarsReset() const
 {
-	
+	return barsReset;
+}
+
+const Motor* BarHandler::GetMotor(int motorIndex) const
+{
+	return motors[motorIndex];
+}
+
+void BarHandler::SetBarsReset(bool barsReset)
+{
+	this->barsReset = barsReset;
 }

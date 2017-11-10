@@ -19,6 +19,8 @@ public:
   	bool GetMotorFinished() const;
   	const Timer* GetTimer() const;
 
+    void SetMotorFinished(bool motorFinished);
+
 private:
     int motorPin;
     int length;
