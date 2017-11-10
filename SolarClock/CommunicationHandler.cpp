@@ -1,61 +1,57 @@
 #include "CommunicationHandler.h"
 
 CommunicationHandler::CommunicationHandler()
+: DATA_RECEIVED(false)
+	, DATA_NOT_RECEIVED(false)
+	, numberOfDHCPRequests(0)
+	, server("virtuedelta.database.windows.net")
+	, sas("SharedAccessSignature sr=https%3a%2f%2feventhubtest1-ns.servicebus.windows.net%2feventhubtest1%2fpublishers%2fdevice%2fmessages&sig=%2fnesMWAv9USFbjdTOewR6K8pzPr27%2fLGSCjZzrKqOeg%3d&se=1418760367&skn=SendReceiveRule")
+	, serviceNamespace("eventhubtest1-ns")
+	, hubName("eventhubtest1")
+	, deviceName("1")
+	, currentMotor(-1)
+	, isAllowedToRequestEnergy(false)
+	, localTime("")
 {
-	for(int i = 0; i < 6; i++)
-	{
-		mac[i] = 0x01;
-	}
-
-	*server = "virtuedelta.database.windows.net";
-	*sas = "SharedAccessSignature sr=https%3a%2f%2feventhubtest1-ns.servicebus.windows.net%2feventhubtest1%2fpublishers%2fdevice%2fmessages&sig=%2fnesMWAv9USFbjdTOewR6K8pzPr27%2fLGSCjZzrKqOeg%3d&se=1418760367&skn=SendReceiveRule";
-	*serviceNamespace = "eventhubtest1-ns";
-	*hubName = "eventhubtest1";
-	*deviceName = "1";
-
-	currentMotor = -1;
-
-	isAllowedToRequestEnergy = false;
+	mac[0]=0x01; mac[1]=0x01; mac[2]=0x01; mac[3]=0x01; mac[4]=0x01; mac[5]=0x01;
 }
 
-int CommunicationHandler::ConnectToServer()
+void CommunicationHandler::SetDataReceived(bool dataReceived)
 {
-	int returnValue = 0;
-
-	if(Ethernet.begin(mac) == 1) //begin() returns 1 if connection succeeded
-	{
-		returnValue = client.connect(server, 80); //connect() returns 1 if succeeded
-	}
-	
-	return returnValue;
+	DATA_RECEIVED = dataReceived;
 }
 
-int CommunicationHandler::RequestIsAllowed()
+void CommunicationHandler::SetDataNotReceived(bool dataNotReceived)
 {
-	
+	DATA_NOT_RECEIVED = dataNotReceived;
 }
 
-int CommunicationHandler::RequestEnergy()
+void CommunicationHandler::SetIsAllowedToRequestEnergy(bool allowed)
 {
-	
+
 }
 
-int CommunicationHandler::RequestLocalTime()
+bool CommunicationHandler::GetDataReceived() const
 {
-	
+	return DATA_RECEIVED;
 }
 
-int CommunicationHandler::RequestAllData()
+bool CommunicationHandler::GetDataNotReceived() const
 {
-	
+	return DATA_NOT_RECEIVED;
 }
-	
+
+int CommunicationHandler::GetNumberOfIPRequests() const
+{
+
+}
+
 const int* CommunicationHandler::GetEnergies() const
 {
 	
 }
 
-int CommunicationHandler::GetCurrentMotor() const
+void CommunicationHandler::GetCurrentMotor() const
 {
 
 }
@@ -70,7 +66,40 @@ bool CommunicationHandler::GetIsAllowedToRequestEnergy() const
 
 }
 
-void CommunicationHandler::SetIsAllowedToRequestEnergy(bool allowed)
+void CommunicationHandler::RequestDHCP()
 {
+	if(Ethernet.begin(mac) == 1)
+	{
+		DATA_RECEIVED = true;
+		numberOfDHCPRequests = 0;
+	}
+	else
+	{
+		numberOfDHCPRequests++;
 
+		if(numberOfDHCPRequests == 10)
+		{
+			DATA_NOT_RECEIVED = true;
+		}
+	}
+}
+
+void CommunicationHandler::RequestIsAllowed()
+{
+	
+}
+
+void CommunicationHandler::RequestEnergy()
+{
+	
+}
+
+void CommunicationHandler::RequestLocalTime()
+{
+	
+}
+
+void CommunicationHandler::RequestAllData()
+{
+	
 }
