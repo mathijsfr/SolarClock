@@ -1,0 +1,15 @@
+#ifndef EVENTS_H
+#define EVENTS_H
+
+enum Events
+{
+    EV_DATA_NOT_RECEIVED,
+    EV_DATA_RECEIVED,
+    EV_CLOCK_INITIALIZED,
+    EV_BAR_SET,
+    EV_WATCHDOG_DONE,
+    EV_WATCHDOG_TICKED,
+    EV_TIME_UP
+};
+
+#endif
