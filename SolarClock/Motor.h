@@ -13,13 +13,15 @@ public:
     ~Motor();
     
   	void On();
-  	void Off();
+    void MotorOnForTime(int time);
 
+    int GetMotorPin() const;
   	int GetLength() const;
   	bool GetMotorFinished() const;
   	const Timer* GetTimer() const;
 
     void SetMotorFinished(bool motorFinished);
+    void SetLength(int length);
 
 private:
     int motorPin;

@@ -1,11 +1,14 @@
 #include "Motor.h"
 
+static Motor* myMotor;
+
 Motor::Motor(int pin)
 	: motorPin(pin)
 	, length(0)
 	, motorFinished(false)
 {
 	timer = new Timer();
+	myMotor = this;
 }
 
 Motor::~Motor()
@@ -14,14 +17,25 @@ Motor::~Motor()
 	timer = NULL;
 }
 
-void Motor::On()
-{
-
+void Off() {
+    int pin = myMotor->GetMotorPin();
+    digitalWrite(pin, HIGH);
 }
 
-void Motor::Off()
+void Motor::On()
 {
+	digitalWrite(motorPin, LOW);
+}
 
+void Motor::MotorOnForTime(int time)
+{
+	On();
+	timer->SetTimer(time, Off);
+}
+
+int Motor::GetMotorPin() const
+{
+	return motorPin;
 }
 
 int Motor::GetLength() const
@@ -42,4 +56,9 @@ const Timer* Motor::GetTimer() const
 void Motor::SetMotorFinished(bool motorFinished)
 {
 	this->motorFinished = motorFinished;
+}
+
+void Motor::SetLength(int length)
+{
+	this->length = length;
 }

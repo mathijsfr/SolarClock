@@ -1,13 +1,17 @@
 #ifndef DATA_HANDLER_H
 #define DATA_HANDLER_H
 
+#include "Motor.h"
+#include "Arduino.h"
+#include "EEPROM.h"
+
 class DataHandler
 {
 public:
-    DataHandler();
+    DataHandler() { };
 
-    void StoreLength(int length, int motorIndex);
-    void RetreiveLengths(int* lengths, int* motorIndexes, int count);
+    void StoreLength(Motor* motor);
+    void RetreiveLengths(Motor** motors, int count);
 
 private:
 

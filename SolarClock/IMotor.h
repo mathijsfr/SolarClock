@@ -7,7 +7,8 @@ public:
     virtual ~iMotor() {};
 
     virtual void On() = 0;
-    virtual void Off() = 0;
+    virtual void MotorOnForTime(int time) = 0;
+
 };
 
 #endif

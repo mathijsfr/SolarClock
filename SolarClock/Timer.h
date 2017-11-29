@@ -11,7 +11,9 @@ public:
     Timer();
 
     void SetTimer(int time, callbackFunction function);
-  	void CheckTimer();
+  	bool CheckTimer();
+
+  	int GetStartTime() const;
 
 private:
     int startTime;

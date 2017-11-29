@@ -3,7 +3,13 @@
 
 #include "DataHandler.h"
 #include "Motor.h"
+#include "Direction.h"
 #include "Arduino.h"
+
+#define powerPin 6 //INT 8
+#define groundPin 2 //INT 6
+#define powerReversePin 3 //INT 7
+#define groundReversePin 4 //INT 5
 
 #define MotorCount 12
 
@@ -26,6 +32,9 @@ public:
     void SetBarsReset(bool barsReset);
 
 private:
+    void SetDirection(Direction direction);
+    void StopPower();
+
     Motor* motors[MotorCount];
     bool barsReset;
     DataHandler& dataHandler;

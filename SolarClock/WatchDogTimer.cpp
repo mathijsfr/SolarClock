@@ -4,18 +4,17 @@ WatchDogTimer::WatchDogTimer()
 	: watchDogCounter(0)
 	, watchDogTicked(false)
 {
-
 }
 
 void WatchDogTimer::UpdateWatchDogCounter()
 {
-
+	watchDogCounter--;
 }
 
 
 void WatchDogTimer::CalculateWatchDog(String localTime)
 {
-
+	
 }
 
 void WatchDogTimer::EnableWatchDog(bool enable)

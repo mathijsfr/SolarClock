@@ -14,7 +14,7 @@ void Timer::SetTimer(int time, callbackFunction function)
 	setMotorOff = function;
 }
 
-void Timer::CheckTimer()
+bool Timer::CheckTimer()
 {
 	if (startTime != -1 || timerDuration != -1 || setMotorOff != NULL)
 	{
@@ -24,6 +24,14 @@ void Timer::CheckTimer()
 			startTime = -1;
 			timerDuration = -1;
 			setMotorOff = NULL;
+			return true;
 		}
 	}
+
+	return false;
+}
+
+int Timer::GetStartTime() const
+{
+	return startTime;
 }
