@@ -1,58 +1,57 @@
 #ifndef COMMUNICATION_HANDLER_H
 #define COMMUNICATION_HANDLER_H
 
-#include "Ethernet.h"
-#include "SPI.h"
 #include "Arduino.h"
 
-#define MotorCount 12
+#include "SPI.h"
+#include "Ethernet.h"
 
 class CommunicationHandler
 {
 public:
-    CommunicationHandler();
+    CommunicationHandler(byte* macAddress, String server);
 
     void SetDataReceived(bool dataReceived);
     void SetDataNotReceived(bool dataNotReceived);
-    
   	void SetIsAllowedToRequestEnergy(bool allowed);
 
+    String GetLocalTime() const;
+    int GetNumberOfDHCPRequests() const;
+    int GetCurrentMotor() const;
+    const int* GetEnergies() const;
+    bool IsConnected();
     bool GetDataReceived() const;
     bool GetDataNotReceived() const;
-
-    int GetNumberOfIPRequests() const;
-    const int* GetEnergies() const;
-    int GetCurrentMotor() const;
-    String GetLocalTime() const;
     bool GetIsAllowedToRequestEnergy() const;
 
+    void ReadResponse(bool resetReadIndex);
     void RequestDHCP();
+    void SendGetRequest();
     void RequestIsAllowed();
-           
-    void RequestEnergy(); /* request energy zet current motor goed aan de hand van interval
-                             en zet het energie op de goede index aan de hand van de current motor */
-    void RequestLocalTime();    /* request local time zet local time in localTime */
-    void RequestAllData(); /* request all data zet goede data in de velden */
-
+    void RequestEnergy();
+    void RequestLocalTime();
 
 private:
+    #define MOTORCOUNT 12
+    #define BUFFER_SIZE 2000
+
     bool DATA_RECEIVED;
     bool DATA_NOT_RECEIVED;
 
-    int numberOfDHCPRequests;
-
-    byte mac[6];
-    char server;
-    char sas;
-    char serviceNamespace;
-    char hubName;
-    char deviceName;
-    EthernetClient client;
-
-    int energies[MotorCount];
-    int currentMotor;
-    bool isAllowedToRequestEnergy;
     String localTime;
+    int numberOfDHCPRequests;
+    int currentMotor;
+    int energies[MOTORCOUNT];
+    bool isAllowedToRequestEnergy;
+
+    byte mac[6]; //Mac-Address Ethernet Shield
+    String server;
+    EthernetClient client;
+    int readIndex;
+    char websiteData[BUFFER_SIZE];
+
+    int  getLength(int startIndex);
+    String filter(char* toFind, int sizeOfToFind);
 };
 
 

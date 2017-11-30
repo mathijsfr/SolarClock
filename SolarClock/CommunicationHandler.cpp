@@ -1,19 +1,19 @@
 #include "CommunicationHandler.h"
 
-CommunicationHandler::CommunicationHandler()
+CommunicationHandler::CommunicationHandler(byte* macAddress, String server)
 : DATA_RECEIVED(false)
-	, DATA_NOT_RECEIVED(false)
-	, numberOfDHCPRequests(0)
-	, server("virtuedelta.database.windows.net")
-	, sas("SharedAccessSignature sr=https%3a%2f%2feventhubtest1-ns.servicebus.windows.net%2feventhubtest1%2fpublishers%2fdevice%2fmessages&sig=%2fnesMWAv9USFbjdTOewR6K8pzPr27%2fLGSCjZzrKqOeg%3d&se=1418760367&skn=SendReceiveRule")
-	, serviceNamespace("eventhubtest1-ns")
-	, hubName("eventhubtest1")
-	, deviceName("1")
-	, currentMotor(-1)
-	, isAllowedToRequestEnergy(false)
-	, localTime("")
+, DATA_NOT_RECEIVED(false)
+, localTime("")
+, numberOfDHCPRequests(0)
+, currentMotor(-1)
+, isAllowedToRequestEnergy(false)
+, server(server)
+, readIndex(0)
+
 {
-	mac[0]=0x01; mac[1]=0x01; mac[2]=0x01; mac[3]=0x01; mac[4]=0x01; mac[5]=0x01;
+	mac[0]=macAddress[0]; mac[1]=macAddress[1];
+	mac[2]=macAddress[2]; mac[3]=macAddress[3];
+	mac[4]=macAddress[4]; mac[5]=macAddress[5];
 }
 
 void CommunicationHandler::SetDataReceived(bool dataReceived)
@@ -31,6 +31,31 @@ void CommunicationHandler::SetIsAllowedToRequestEnergy(bool allowed)
 	isAllowedToRequestEnergy = allowed;
 }
 
+String CommunicationHandler::GetLocalTime() const
+{
+	return localTime;
+}
+
+int CommunicationHandler::GetNumberOfDHCPRequests() const
+{
+	return numberOfDHCPRequests;
+}
+
+int CommunicationHandler::GetCurrentMotor() const
+{
+	return currentMotor;
+}
+
+const int* CommunicationHandler::GetEnergies() const
+{
+	return energies;
+}
+
+bool CommunicationHandler::IsConnected()
+{
+	return client.connected();
+}
+
 bool CommunicationHandler::GetDataReceived() const
 {
 	return DATA_RECEIVED;
@@ -41,31 +66,13 @@ bool CommunicationHandler::GetDataNotReceived() const
 	return DATA_NOT_RECEIVED;
 }
 
-int CommunicationHandler::GetNumberOfIPRequests() const
-{
-	return numberOfDHCPRequests;
-}
-
-const int* CommunicationHandler::GetEnergies() const
-{
-	return energies;
-}
-
-int CommunicationHandler::GetCurrentMotor() const
-{
-	return currentMotor;
-}
-
-String CommunicationHandler::GetLocalTime() const
-{
-	return localTime;
-}
-
 bool CommunicationHandler::GetIsAllowedToRequestEnergy() const
 {
 	return isAllowedToRequestEnergy;
 }
 
+/* requests DHCP from router*/
+/* if successful => DATA_RECEIVED = true, else DATA_NOT_RECEIVED = true */
 void CommunicationHandler::RequestDHCP()
 {
 	if(Ethernet.begin(mac) == 1)
@@ -84,22 +91,130 @@ void CommunicationHandler::RequestDHCP()
 	}
 }
 
+/* sends get request to server */
+void CommunicationHandler::SendGetRequest()
+{
+	int stringLength = server.length() + 1;
+	
+	char serverAsChar[stringLength];
+	server.toCharArray(serverAsChar, stringLength);
+
+	if (client.connect(serverAsChar, 80) == 1)
+	{
+		Serial.println("Connected");
+
+		client.println("GET / HTTP/1.1");
+		client.print("Host: ");
+		client.println(server);
+		client.println("Connection: close");
+		client.println();
+
+		DATA_RECEIVED = true;
+	}
+	else
+	{
+		DATA_NOT_RECEIVED = true;
+	}
+}
+
+/* reads reponse data from server and fills website data */
+void CommunicationHandler::ReadResponse(bool resetReadIndex)
+{
+	if(resetReadIndex)
+	{
+		readIndex = 0;
+	}
+
+	while (client.available())
+  	{	
+	    char c = client.read();
+
+	    websiteData[readIndex] = c;
+	    websiteData[readIndex + 1] = '\0';
+	    readIndex++;
+  	}
+}
+
+/* filters website data for isAllowed data */
 void CommunicationHandler::RequestIsAllowed()
 {
-	
+	String isAllowedString("allowed");
 }
 
+/* filters website data for energy data */
 void CommunicationHandler::RequestEnergy()
 {
-	
+	if(isAllowedToRequestEnergy)
+	{
+		String energyString("energy");
+	}
 }
 
+/* filters website data for local time data */
 void CommunicationHandler::RequestLocalTime()
 {
-	
+	String localTime("localtime");
 }
 
-void CommunicationHandler::RequestAllData()
+/*PRIVATE*/
+/* returns the length of the value */
+int CommunicationHandler::getLength(int startIndex)
 {
-	
+	int lengthOfValue = 0;
+
+	for (int i = startIndex; i < BUFFER_SIZE; i++)
+	{
+		if (websiteData[i] == '<')
+		{
+		  return lengthOfValue;
+		}
+		else
+		{
+		  lengthOfValue++;
+		}
+	}
+
+	return -1;
+}
+
+/*PRIVATE*/
+/*returns the string of the value */
+String CommunicationHandler::filter(char* toFind, int sizeOfToFind)
+{
+	int index = 0;
+	sizeOfToFind = sizeOfToFind - 1;
+
+	for (int indexText = 0; indexText < BUFFER_SIZE - sizeOfToFind; ++indexText)
+	{
+		if (websiteData[indexText] == toFind[index])
+		{
+			if (++index == sizeOfToFind)
+			{
+				int startIndex = indexText + 1;
+				int lengthOfValue = getLength(startIndex);
+
+				if(lengthOfValue != -1)
+				{
+					char value [lengthOfValue + 1];
+					for(int i = 0; i < lengthOfValue; i++)
+					{
+						value[i] = websiteData[startIndex + i];
+					}
+
+					value[lengthOfValue] = '\0';
+
+					String valueString(value);
+					return valueString;
+				}
+			}
+		}
+		else
+		{
+			indexText -= index;
+			index = 0;
+		}
+	}
+
+	String str("");
+	return str;
 }

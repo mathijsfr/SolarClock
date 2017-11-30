@@ -3,11 +3,14 @@
 
 #define MotorCount 12
 
+byte mac[6] = {0x01, 0x01, 0x01, 0x01, 0x01, 0x01};
+String server("virtueusage.azurewebsites.net/");
+
 int motorPins[MotorCount] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
 DataHandler* dataHandler = new DataHandler();
 BarHandler* barHandler = new BarHandler(motorPins, *dataHandler);
 
-CommunicationHandler* communicationHandler = new CommunicationHandler();
+CommunicationHandler* communicationHandler = new CommunicationHandler(mac, server);
 WatchDogTimer* watchDogTimer = new WatchDogTimer();
 
 SolarClock* solarClock = new SolarClock(*barHandler, *communicationHandler, *watchDogTimer);
