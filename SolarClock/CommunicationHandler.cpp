@@ -8,7 +8,6 @@ CommunicationHandler::CommunicationHandler(byte* macAddress, String server)
 , currentMotor(-1)
 , isAllowedToRequestEnergy(false)
 , server(server)
-, readIndex(0)
 
 {
 	mac[0]=macAddress[0]; mac[1]=macAddress[1];
@@ -43,7 +42,7 @@ int CommunicationHandler::GetNumberOfDHCPRequests() const
 
 int CommunicationHandler::GetCurrentMotor() const
 {
-	return currentMotor;
+	return localTime >= 12 ? localTime - 12 : localTime;
 }
 
 const int* CommunicationHandler::GetEnergies() const
@@ -51,7 +50,7 @@ const int* CommunicationHandler::GetEnergies() const
 	return energies;
 }
 
-bool CommunicationHandler::IsConnected()
+bool CommunicationHandler::GetIsConnected()
 {
 	return client.connected();
 }
@@ -71,28 +70,58 @@ bool CommunicationHandler::GetIsAllowedToRequestEnergy() const
 	return isAllowedToRequestEnergy;
 }
 
-/* requests DHCP from router*/
-/* if successful => DATA_RECEIVED = true, else DATA_NOT_RECEIVED = true */
-void CommunicationHandler::RequestDHCP()
+void CommunicationHandler::Update()
 {
 	if(Ethernet.begin(mac) == 1)
 	{
-		DATA_RECEIVED = true;
 		numberOfDHCPRequests = 0;
+
+		if(sendGetRequest())
+		{
+			readResponse();
+			if(RequestIsAllowed() && requestEnergy() && requestLocalTime())
+			{
+				DATA_RECEIVED = true;
+			}
+		}
 	}
 	else
 	{
-		numberOfDHCPRequests++;
-
-		if(numberOfDHCPRequests == 10)
-		{
-			DATA_NOT_RECEIVED = true;
-		}
+		handleConnectionError();
+		return;
 	}
+
+	DATA_NOT_RECEIVED = true;
 }
 
+/* filters website data for isAllowed data */
+bool CommunicationHandler::RequestIsAllowed()
+{
+	char isAllowedLabel [] = "<span id=\"DataList1_allowedLabel_0\">";
+	String isAllowedString = filter(isAllowedLabel, sizeof(isAllowedLabel));
+
+	if(isAllowedString != "")
+	{
+		if(isAllowedString == "1")
+		{
+			isAllowedToRequestEnergy = true;
+		}
+		else if(isAllowedString == "0")
+		{
+			isAllowedToRequestEnergy = false;
+		}
+
+		DATA_RECEIVED = true;
+		return true;
+	}
+
+	DATA_NOT_RECEIVED = true;
+	return false;
+}
+
+/*PRIVATE*/
 /* sends get request to server */
-void CommunicationHandler::SendGetRequest()
+bool CommunicationHandler::sendGetRequest()
 {
 	int stringLength = server.length() + 1; // +1 for \0
 	
@@ -109,21 +138,17 @@ void CommunicationHandler::SendGetRequest()
 		client.println("Connection: close");
 		client.println();
 
-		DATA_RECEIVED = true;
+		return true;
 	}
-	else
-	{
-		DATA_NOT_RECEIVED = true;
-	}
+
+	return false;
 }
 
+/*PRIVATE*/
 /* reads reponse data from server and fills website data */
-void CommunicationHandler::ReadResponse(bool resetReadIndex)
+void CommunicationHandler::readResponse()
 {
-	if(resetReadIndex)
-	{
-		readIndex = 0;
-	}
+	int readIndex = 0;
 
 	while (client.available())
   	{	
@@ -133,28 +158,11 @@ void CommunicationHandler::ReadResponse(bool resetReadIndex)
 	    websiteData[readIndex + 1] = '\0';
 	    readIndex++;
   	}
-
-  	DATA_RECEIVED = true;
 }
 
-/* filters website data for isAllowed data */
-void CommunicationHandler::RequestIsAllowed()
-{
-	char isAllowedLabel [] = "<span id=\"DataList1_allowedLabel_0\">";
-	String isAllowedString = filter(isAllowedLabel, sizeof(isAllowedLabel));
-
-	if(isAllowedString == "1")
-	{
-		isAllowedToRequestEnergy = true;
-	}
-	else if(isAllowedString == "0")
-	{
-		isAllowedToRequestEnergy = false;
-	}
-}
-
+/*PRIVATE*/
 /* filters website data for energy data */
-void CommunicationHandler::RequestEnergy()
+bool CommunicationHandler::requestEnergy()
 {
 	if(isAllowedToRequestEnergy)
 	{
@@ -178,17 +186,40 @@ void CommunicationHandler::RequestEnergy()
 				}
 			}
 
-			RequestLocalTime();
-
-			
+			return true;
 		}
 	}
+
+	return false;
 }
 
+/*PRIVATE*/
 /* filters website data for local time data */
-void CommunicationHandler::RequestLocalTime()
+bool CommunicationHandler::requestLocalTime()
 {
-	String localTime("localtime");
+	char localTimeLabel[] = "<span id=\"DataList1_localTimeLabel_0\">";
+	String localTimeString = filter(localTimeLabel, sizeof(localTimeLabel));
+
+	if(localTimeString != "")
+	{
+		localTime = localTimeString.substring(0, localTimeString.length()).toInt();
+		return true;
+	}
+
+	return false;
+}
+
+/*PRIVATE*/
+/* if failed to connect 10 times, DATA_NOT_RECEIVED will be set */
+void CommunicationHandler::handleConnectionError()
+{
+	numberOfDHCPRequests++;
+
+	if(numberOfDHCPRequests == 10)
+	{
+		DATA_NOT_RECEIVED = true;
+		numberOfDHCPRequests = 0;
+	}	
 }
 
 /*PRIVATE*/
@@ -213,7 +244,23 @@ int CommunicationHandler::getLength(int startIndex)
 }
 
 /*PRIVATE*/
-/*returns the string of the value */
+/* determines the value as string and returns the value */
+String CommunicationHandler::determineValue(int startIndex, int lengthOfValue)
+{
+	char value [lengthOfValue + 1];
+	for(int i = 0; i < lengthOfValue; i++)
+	{
+		value[i] = websiteData[startIndex + i];
+	}
+
+	value[lengthOfValue] = '\0';
+
+	String valueString(value);
+	return valueString;
+}
+
+/*PRIVATE*/
+/*extracts the value of toFind and returns the value as a string */
 String CommunicationHandler::filter(char* toFind, int sizeOfToFind)
 {
 	int index = 0;
@@ -230,16 +277,7 @@ String CommunicationHandler::filter(char* toFind, int sizeOfToFind)
 
 				if(lengthOfValue != -1)
 				{
-					char value [lengthOfValue + 1];
-					for(int i = 0; i < lengthOfValue; i++)
-					{
-						value[i] = websiteData[startIndex + i];
-					}
-
-					value[lengthOfValue] = '\0';
-
-					String valueString(value);
-					return valueString;
+					return determineValue(startIndex, lengthOfValue);
 				}
 			}
 		}

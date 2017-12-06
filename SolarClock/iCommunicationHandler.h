@@ -14,17 +14,13 @@ public:
     virtual int GetNumberOfDHCPRequests() const = 0;
     virtual int GetCurrentMotor() const = 0;
     virtual const int* GetEnergies() const = 0;
-    virtual bool IsConnected() = 0;
+    virtual bool GetIsConnected() = 0;
     virtual bool GetDataReceived() const = 0;
     virtual bool GetDataNotReceived() const = 0;
     virtual bool GetIsAllowedToRequestEnergy() const = 0;
 
-    virtual void ReadResponse(bool resetReadIndex) = 0;
-    virtual void RequestDHCP() = 0;
-    virtual void SendGetRequest() = 0;
-    virtual void RequestIsAllowed() = 0;
-    virtual void RequestEnergy() = 0;
-    virtual void RequestLocalTime() = 0;
+    virtual void Update() = 0;
+    virtual bool RequestIsAllowed() = 0;
 
 };
 
