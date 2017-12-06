@@ -4,22 +4,22 @@
 
 void DataHandler::StoreLength(Motor* motor)
 {
-	int length = motor->GetLength();
-	char highByte = highByte(length);
-	char lowByte = lowByte(length);
+	int steps = motor->GetSteps();
+	char highByte = highByte(steps);
+	char lowByte = lowByte(steps);
 
-	EEPROM.write(motor->GetMotorPin() * 2, highByte);
-	EEPROM.write((motor->GetMotorPin() * 2) + 1, lowByte);
+	EEPROM.write(motor->GetMotorPin(), highByte);
+	EEPROM.write(motor->GetMotorPin() + 1, lowByte);
 }
 
 void DataHandler::RetreiveLengths(Motor** motors, int count)
 {
 	for (int i = 0; i < count; ++i)
 	{
-		int length = EEPROM.read(motors[i]->GetMotorPin() * 2);
+		int length = EEPROM.read(motors[i]->GetMotorPin());
 		length <<= 7;
-		length |= EEPROM.read((motors[i]->GetMotorPin() * 2) + 1);
+		length |= EEPROM.read(motors[i]->GetMotorPin() + 1);
 
-		motors[i]->SetLength(length);
+		motors[i]->SetSteps(length);
 	}
 }

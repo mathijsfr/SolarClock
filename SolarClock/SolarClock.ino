@@ -1,22 +1,48 @@
 #include "SolarClock.h"
-#include "DataHandler.h"
 
 #define MotorCount 12
 
-int motorPins[MotorCount] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
-DataHandler* dataHandler = new DataHandler();
-BarHandler* barHandler = new BarHandler(motorPins, *dataHandler);
+MotorPins motorPins[MotorCount] = {	{ 2, 3, 4 }, // motor 1
+									{ 2, 3, 4 }, // motor 2
+									{ 2, 3, 4 }, // motor 3
+									{ 2, 3, 4 }, // motor 4
+									{ 2, 3, 4 }, // motor 5
+									{ 2, 3, 4 }, // motor 6
+									{ 2, 3, 4 }, // motor 7
+									{ 2, 3, 4 }, // motor 8
+									{ 2, 3, 4 }, // motor 9
+									{ 2, 3, 4 }, // motor 10
+									{ 2, 3, 4 }, // motor 11
+									{ 2, 3, 4 }}; // motor 12
 
-CommunicationHandler* communicationHandler = new CommunicationHandler();
-WatchDogTimer* watchDogTimer = new WatchDogTimer();
+DataHandler* dataHandler;
+BarHandler* barHandler;
 
-SolarClock* solarClock = new SolarClock(*barHandler, *communicationHandler, *watchDogTimer);
+CommunicationHandler* communicationHandler;
+WatchDogTimer* watchDogTimer;
+
+SolarClock* solarClock;
 
 bool timerInteruptTicked;
 
 void setup()
 {
 	Serial.begin(9600);
+
+
+	Motor* motors[MotorCount];
+	for (int i = 0; i < MotorCount; ++i)
+	{
+		motors[i] = new Motor(motorPins[i]);
+	}
+
+	dataHandler = new DataHandler();
+	barHandler = new BarHandler(motors, *dataHandler);
+	communicationHandler = new CommunicationHandler();
+	watchDogTimer = new WatchDogTimer();
+
+	solarClock = new SolarClock(*barHandler, *communicationHandler, *watchDogTimer);
+
 	timerInteruptTicked = false;
 }
 

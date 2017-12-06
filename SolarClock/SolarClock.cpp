@@ -32,8 +32,9 @@ States SolarClock::HandleInitializeClockState(Events ev)
         {
         	if (barHandler.GetBarsReset())
         	{
-        		int* counters = barHandler.CalculateTimeCounters(communicationHandler.GetEnergies(), MotorCount);
-        		barHandler.SetAllBars(counters, MotorCount);
+                int steps[MotorCount];
+        		 barHandler.CalculateSteps(communicationHandler.GetEnergies(), steps, MotorCount);
+        		barHandler.SetAllBars(steps, MotorCount);
         	}
         	break;
        	}
@@ -59,9 +60,9 @@ States SolarClock::HandleRequestEnergyState(Events ev)
             barHandler.ResetBar(motorIndex);
 
             int energy = communicationHandler.GetEnergies()[motorIndex];
-            int counter = barHandler.CalculateTimeCounter(energy);
+            int steps = barHandler.CalculateSteps(energy);
 
-            barHandler.SetBar(motorIndex, counter);
+            barHandler.SetBar(motorIndex, steps);
             result = State_DisplayEnergy;
             break;
 		}
