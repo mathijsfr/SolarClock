@@ -25,7 +25,7 @@ States SolarClock::HandleInitializeClockState(Events ev)
         }
         case EV_TIME_UP:
         {
-            communicationHandler.RequestAllData();
+            communicationHandler.Update();
             break;
         }
         case EV_DATA_RECEIVED:

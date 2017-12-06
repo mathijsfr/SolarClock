@@ -21,17 +21,13 @@ public:
     int GetNumberOfDHCPRequests() const;
     int GetCurrentMotor() const;
     const int* GetEnergies() const;
-    bool IsConnected();
+    bool GetIsConnected();
     bool GetDataReceived() const;
     bool GetDataNotReceived() const;
     bool GetIsAllowedToRequestEnergy() const;
 
-    void ReadResponse(bool resetReadIndex);
-    void RequestDHCP();
-    void SendGetRequest();
-    void RequestIsAllowed();
-    void RequestEnergy();
-    void RequestLocalTime();
+    void Update();
+    bool RequestIsAllowed();
 
 private:
     bool DATA_RECEIVED;
@@ -46,10 +42,16 @@ private:
     byte mac[6]; //Mac-Address Ethernet Shield
     String server;
     EthernetClient client;
-    int readIndex;
     char websiteData[BUFFER_SIZE];
 
+    void handleConnectionError();
+    void readResponse();
+    bool sendGetRequest();
+    bool requestEnergy();
+    bool requestLocalTime();
+
     int  getLength(int startIndex);
+    String determineValue(int startIndex, int lengthOfValue);
     String filter(char* toFind, int sizeOfToFind);
 };
 
