@@ -2,7 +2,7 @@
 #define MOTOR_H
 
 #include "IMotor.h"
-#include "motorPinLayout.h"
+#include "MotorPinLayout.h"
 
 #include "Arduino.h"
 
