@@ -30,12 +30,10 @@ States SolarClock::HandleInitializeClockState(Events ev)
         }
         case EV_DATA_RECEIVED:
         {
-        	if (barHandler.GetBarsReset())
-        	{
-                int steps[MotorCount];
-        		barHandler.CalculateSteps(communicationHandler.GetEnergies(), steps, MotorCount);
-        		barHandler.SetAllBars(steps, MotorCount);
-        	}
+        	int steps[MotorCount];
+    		barHandler.CalculateSteps(communicationHandler.GetEnergies(), steps, MotorCount);
+    		barHandler.SetBars(steps, MotorCount);
+        	
         	break;
        	}
         default:
@@ -63,13 +61,13 @@ States SolarClock::HandleRequestEnergyState(Events ev)
             int steps = barHandler.CalculateSteps(energy);
 
             barHandler.SetBar(motorIndex, steps);
-            result = State_DisplayEnergy;
+            result = State_WatchDogHandling;
             break;
 		}
         case EV_DATA_NOT_RECEIVED:
         {
             communicationHandler.SetIsAllowedToRequestEnergy(false);
-            barHandler.ResetBars();
+            barHandler.ResetBars(MotorCount);
             result = State_InitializeClock;
             break;
         }
@@ -77,64 +75,12 @@ States SolarClock::HandleRequestEnergyState(Events ev)
         {
             if (communicationHandler.GetIsAllowedToRequestEnergy())
             {
-            	communicationHandler.RequestEnergy();
+            	communicationHandler.Update();
             }
             else
             {
             	communicationHandler.RequestIsAllowed();
             }
-            break;
-        }
-        default:
-            // ignored event, nothing to do here
-            break;
-    }
-
-    return result;
-}
-
-States SolarClock::HandleDisplayEnergyState(Events ev)
-{
-    States result = State_DisplayEnergy;
-
-    switch (ev)
-    {
-        case EV_BAR_SET:
-        {
-            result = State_RequestTime;
-            break;
-        }
-        default:
-            // ignored event, nothing to do here
-            break;
-    }
-
-    return result;
-}
-
-States SolarClock::HandleRequestTimeState(Events ev)
-{
-    States result = State_RequestTime;
-
-    switch (ev)
-    {
-        case EV_TIME_UP:
-        {
-            communicationHandler.RequestLocalTime();
-            break;
-        }
-        case EV_DATA_RECEIVED:
-        {
-            watchDogTimer.CalculateWatchDog(communicationHandler.GetLocalTime());
-            watchDogTimer.EnableWatchDog(true);
-            result = State_WatchDogHandling;
-            break;
-        }
-        case EV_DATA_NOT_RECEIVED:
-        {
-            communicationHandler.SetIsAllowedToRequestEnergy(false);
-            barHandler.ResetBars();
-            result = State_InitializeClock;
             break;
         }
         default:
@@ -181,14 +127,6 @@ void SolarClock::HandleEvent(Events ev)
             
         case State_RequestEnergy:
             currentState = HandleRequestEnergyState(ev);
-            break;
-
-        case State_DisplayEnergy:
-            currentState = HandleDisplayEnergyState(ev);
-            break;
-
-        case State_RequestTime:
-            currentState = HandleRequestTimeState(ev);
             break;
 
         case State_WatchDogHandling:

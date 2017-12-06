@@ -15,17 +15,13 @@ class mCommunicationHandler : public iCommunicationHandler
         MOCK_CONST_METHOD0(GetNumberOfDHCPRequests, int());
         MOCK_CONST_METHOD0(GetCurrentMotor, int());
         MOCK_CONST_METHOD0(GetEnergies, const int*());
-        MOCK_METHOD0(IsConnected, bool());
+        MOCK_METHOD0(GetIsConnected, bool());
         MOCK_CONST_METHOD0(GetDataReceived, bool());
         MOCK_CONST_METHOD0(GetDataNotReceived, bool());
         MOCK_CONST_METHOD0(GetIsAllowedToRequestEnergy, bool());
 
-        MOCK_METHOD1(ReadResponse, void(bool resetReadIndex));
-        MOCK_METHOD0(RequestDHCP, void());
-        MOCK_METHOD0(SendGetRequest, void());
-        MOCK_METHOD0(RequestIsAllowed, void());
-        MOCK_METHOD0(RequestEnergy, void());
-        MOCK_METHOD0(RequestLocalTime, void());
+        MOCK_METHOD0(Update, void());
+        MOCK_METHOD0(RequestIsAllowed, bool());
 };
 
 #endif

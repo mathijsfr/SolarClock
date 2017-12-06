@@ -15,9 +15,9 @@ public:
     int CalculateSteps(int energy);
     void CalculateSteps(const int* energies, int* steps, int count);
     void ResetBar(int motorIndex);
-    void ResetBars();
+    void ResetBars(int count);
     void SetBar(int energy, int motorIndex);
-    void SetAllBars(int* energies, int count);
+    void SetBars(int* energies, int count);
 
     bool GetBarsReset() const;
     const Motor* GetMotor(int motorIndex) const;

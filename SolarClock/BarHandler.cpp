@@ -48,9 +48,9 @@ void BarHandler::ResetBar(int motorIndex)
 	motors[motorIndex]->SetMotorFinished(false);
 }
 
-void BarHandler::ResetBars()
+void BarHandler::ResetBars(int count)
 {
-	for (int i = 0; i < MotorCount; ++i)
+	for (int i = 0; i < count; ++i)
 	{
 		ResetBar(i);
 	}
@@ -63,7 +63,7 @@ void BarHandler::SetBar(int energy, int motorIndex)
 	motors[motorIndex]->MotorOnForSteps(steps);
 }
 
-void BarHandler::SetAllBars(int* energies, int count)
+void BarHandler::SetBars(int* energies, int count)
 {
 	for (int i = 0; i < count; ++i)
 	{
