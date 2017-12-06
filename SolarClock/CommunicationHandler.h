@@ -1,12 +1,14 @@
 #ifndef COMMUNICATION_HANDLER_H
 #define COMMUNICATION_HANDLER_H
 
-#include "Arduino.h"
-
 #include "SPI.h"
 #include "Ethernet.h"
+#include "iCommunicationHandler.h"
 
-class CommunicationHandler
+#define MOTORCOUNT 12
+#define BUFFER_SIZE 2000
+
+class CommunicationHandler : public iCommunicationHandler
 {
 public:
     CommunicationHandler(byte* macAddress, String server);
@@ -15,7 +17,7 @@ public:
     void SetDataNotReceived(bool dataNotReceived);
   	void SetIsAllowedToRequestEnergy(bool allowed);
 
-    String GetLocalTime() const;
+    int GetLocalTime() const;
     int GetNumberOfDHCPRequests() const;
     int GetCurrentMotor() const;
     const int* GetEnergies() const;
@@ -32,9 +34,6 @@ public:
     void RequestLocalTime();
 
 private:
-    #define MOTORCOUNT 12
-    #define BUFFER_SIZE 2000
-
     bool DATA_RECEIVED;
     bool DATA_NOT_RECEIVED;
 

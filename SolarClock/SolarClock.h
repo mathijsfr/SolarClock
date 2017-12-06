@@ -3,16 +3,16 @@
 
 #include "Events.h"
 #include "States.h"
-#include "BarHandler.h"
-#include "CommunicationHandler.h"
-#include "WatchDogTimer.h"
+#include "iBarHandler.h"
+#include "iCommunicationHandler.h"
+#include "iWatchDogTimer.h"
 
 #include "Arduino.h"
 
 class SolarClock
 {
 public:
-    SolarClock(BarHandler& barHandler, CommunicationHandler& communicationHandler, WatchDogTimer& watchDogTimer);
+    SolarClock(iBarHandler& barHandler, iCommunicationHandler& communicationHandler, iWatchDogTimer& watchDogTimer);
 
     void HandleEvent(Events ev);
     States HandleInitializeClockState(Events ev);
@@ -23,9 +23,9 @@ public:
 
 private:
     States currentState;
-    BarHandler& barHandler;
-    CommunicationHandler& communicationHandler;
-    WatchDogTimer& watchDogTimer;
+    iBarHandler& barHandler;
+    iCommunicationHandler& communicationHandler;
+    iWatchDogTimer& watchDogTimer;
 
 };
 

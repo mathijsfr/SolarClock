@@ -1,4 +1,7 @@
 #include "SolarClock.h"
+#include "CommunicationHandler.h"
+#include "BarHandler.h"
+#include "WatchDogTimer.h"
 
 #define MotorCount 12
 
@@ -18,10 +21,10 @@ MotorPins motorPins[MotorCount] = {	{ 2, 3, 4 }, // motor 1
 									{ 2, 3, 4 }}; // motor 12
 
 DataHandler* dataHandler;
-BarHandler* barHandler;
+iBarHandler* barHandler;
 
-CommunicationHandler* communicationHandler;
-WatchDogTimer* watchDogTimer;
+iCommunicationHandler* communicationHandler;
+iWatchDogTimer* watchDogTimer;
 
 SolarClock* solarClock;
 
@@ -40,7 +43,7 @@ void setup()
 
 	dataHandler = new DataHandler();
 	barHandler = new BarHandler(motors, *dataHandler);
-	communicationHandler = new CommunicationHandler();
+	communicationHandler = new CommunicationHandler(mac, server);
 	watchDogTimer = new WatchDogTimer();
 
 	solarClock = new SolarClock(*barHandler, *communicationHandler, *watchDogTimer);

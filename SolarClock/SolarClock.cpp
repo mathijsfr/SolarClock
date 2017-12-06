@@ -4,7 +4,7 @@
 
 #define MotorCount 12
 
-SolarClock::SolarClock(BarHandler& barHandler, CommunicationHandler& communicationHandler, WatchDogTimer& watchDogTimer)
+SolarClock::SolarClock(iBarHandler& barHandler, iCommunicationHandler& communicationHandler, iWatchDogTimer& watchDogTimer)
 	: currentState(State_InitializeClock)
     , barHandler(barHandler)
     , communicationHandler(communicationHandler)

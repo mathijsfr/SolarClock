@@ -1,12 +1,11 @@
 #ifndef BAR_HANDLER_H
 #define BAR_HANDLER_H
 
-#include "DataHandler.h"
-#include "Arduino.h"
+#include "iBarHandler.h"
 
 #define MotorCount 12
 
-class BarHandler
+class BarHandler : public iBarHandler
 {
 public:
     BarHandler(Motor** motors, DataHandler& dataHandler);
@@ -17,7 +16,7 @@ public:
     void ResetBar(int motorIndex);
     void ResetBars();
     void SetBar(int energy, int motorIndex);
-    void SetAllBars(int* timeCounters, int count);
+    void SetAllBars(int* energies, int count);
 
     bool GetBarsReset() const;
     const Motor* GetMotor(int motorIndex) const;

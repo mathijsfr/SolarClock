@@ -1,15 +1,15 @@
 #ifndef WATCH_DOG_TIMER_H
 #define WATCH_DOG_TIMER_H
 
-#include "Arduino.h"
+#include "iWatchDogTimer.h"
 
-class WatchDogTimer
+class WatchDogTimer : public iWatchDogTimer
 {
 public:
     WatchDogTimer();
 
     void UpdateWatchDogCounter();
-    void CalculateWatchDog(String localTime);
+    void CalculateWatchDog(int localTime);
     void EnableWatchDog(bool enable);
 
     int GetWatchDogCounter() const;

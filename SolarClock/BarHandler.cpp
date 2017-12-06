@@ -50,27 +50,10 @@ void BarHandler::ResetBar(int motorIndex)
 
 void BarHandler::ResetBars()
 {
-	// dataHandler.RetreiveLengths(motors, MotorCount);
-	// SetDirection(Backward);
-
-	// int motorsFinished = 0;
-	// while(motorsFinished < MotorCount)
-	// {
-	// 	for (int i = 0; i < MotorCount; ++i)
-	// 	{
-	// 		if (!motors[i]->GetMotorFinished()
-	// 			&& motors[i]->GetTimer()->GetStartTime() == -1)
-	// 		{
-	// 			motors[i]->MotorOnForTime(motors[i]->GetSteps());
-	// 		}
-	// 		else if (!motors[i]->GetMotorFinished()
-	// 			&& motors[i]->GetTimer()->CheckTimer())
-	// 		{
-	// 			motors[i]->SetMotorFinished(true);
-	// 			motorsFinished++;
-	// 		}
-	// 	}
-	// }
+	for (int i = 0; i < MotorCount; ++i)
+	{
+		ResetBar(i);
+	}
 }
 
 void BarHandler::SetBar(int energy, int motorIndex)
@@ -80,9 +63,12 @@ void BarHandler::SetBar(int energy, int motorIndex)
 	motors[motorIndex]->MotorOnForSteps(steps);
 }
 
-void BarHandler::SetAllBars(int* timeCounters, int count)
+void BarHandler::SetAllBars(int* energies, int count)
 {
-
+	for (int i = 0; i < MotorCount; ++i)
+	{
+		SetBar(energies[i], i);
+	}
 }
 
 bool BarHandler::GetBarsReset() const

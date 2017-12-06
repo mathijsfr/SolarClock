@@ -31,7 +31,7 @@ void CommunicationHandler::SetIsAllowedToRequestEnergy(bool allowed)
 	isAllowedToRequestEnergy = allowed;
 }
 
-String CommunicationHandler::GetLocalTime() const
+int CommunicationHandler::GetLocalTime() const
 {
 	return localTime;
 }
