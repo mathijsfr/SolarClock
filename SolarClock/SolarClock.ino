@@ -2,6 +2,8 @@
 
 #define MotorCount 12
 
+String server("virtueusage.azurewebsites.net/");
+byte mac[6] = {0x01, 0x01, 0x01, 0x01, 0x01, 0x01};
 MotorPins motorPins[MotorCount] = {	{ 2, 3, 4 }, // motor 1
 									{ 2, 3, 4 }, // motor 2
 									{ 2, 3, 4 }, // motor 3
