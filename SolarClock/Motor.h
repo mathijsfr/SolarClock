@@ -2,32 +2,30 @@
 #define MOTOR_H
 
 #include "IMotor.h"
-#include "Timer.h"
+#include "motorPinLayout.h"
 
 #include "Arduino.h"
 
 class Motor : public iMotor
 {
 public:
-    Motor(int pin);
+    Motor(MotorPins motorPins);
     ~Motor();
     
-  	void On();
-    void MotorOnForTime(int time);
+    void MotorOnForSteps(int steps);
 
     int GetMotorPin() const;
-  	int GetLength() const;
+  	int GetSteps() const;
   	bool GetMotorFinished() const;
-  	const Timer* GetTimer() const;
 
+    void SetDirection(Direction direction);
     void SetMotorFinished(bool motorFinished);
-    void SetLength(int length);
+    void SetSteps(int steps);
 
 private:
-    int motorPin;
-    int length;
+    MotorPins motorPins;
+    int steps;
     bool motorFinished;
-    Timer* timer;
 
 };
 

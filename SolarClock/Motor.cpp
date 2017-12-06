@@ -1,46 +1,55 @@
 #include "Motor.h"
 
-static Motor* myMotor;
+#define pulseWidthDelay 5
 
-Motor::Motor(int pin)
-	: motorPin(pin)
-	, length(0)
+Motor::Motor(MotorPins pins)
+	: motorPins(pins)
+	, steps(0)
 	, motorFinished(false)
 {
-	timer = new Timer();
-	myMotor = this;
+	pinMode(motorPins.directionPin, OUTPUT);
+	pinMode(motorPins.stepPin, OUTPUT);
+	pinMode(motorPins.mode1Pin, OUTPUT);
 }
 
 Motor::~Motor()
 {
-	delete timer;
-	timer = NULL;
 }
 
-void Off() {
-    int pin = myMotor->GetMotorPin();
-    digitalWrite(pin, HIGH);
-}
-
-void Motor::On()
+void Motor::MotorOnForSteps(int steps)
 {
-	digitalWrite(motorPin, LOW);
+	digitalWrite(motorPins.mode1Pin, LOW);
+
+	for (int i = 0; i < steps; ++i)
+	{
+		digitalWrite(motorPins.stepPin, HIGH);
+	    delayMicroseconds(pulseWidthDelay);
+	    digitalWrite(motorPins.stepPin, LOW);
+	}
+
+	digitalWrite(motorPins.mode1Pin, HIGH);
 }
 
-void Motor::MotorOnForTime(int time)
+void Motor::SetDirection(Direction direction)
 {
-	On();
-	timer->SetTimer(time, Off);
+	if (direction == Forward)
+	{
+		digitalWrite(motorPins.directionPin, LOW);
+	}
+	else
+	{
+		digitalWrite(motorPins.directionPin, HIGH);
+	}
 }
 
 int Motor::GetMotorPin() const
 {
-	return motorPin;
+	return motorPins.stepPin;
 }
 
-int Motor::GetLength() const
+int Motor::GetSteps() const
 {
-	return length;
+	return steps;
 }
 
 bool Motor::GetMotorFinished() const
@@ -48,17 +57,12 @@ bool Motor::GetMotorFinished() const
 	return motorFinished;
 }
 
-const Timer* Motor::GetTimer() const
-{
-	return timer;
-}
-
 void Motor::SetMotorFinished(bool motorFinished)
 {
 	this->motorFinished = motorFinished;
 }
 
-void Motor::SetLength(int length)
+void Motor::SetSteps(int steps)
 {
-	this->length = length;
+	this->steps = steps;
 }
