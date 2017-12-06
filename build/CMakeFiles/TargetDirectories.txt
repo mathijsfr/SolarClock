@@ -1,0 +1,4 @@
+/home/student/Desktop/prc31/PRC3_Memory_Management_2/build/googlemock/CMakeFiles/gmock.dir
+/home/student/Desktop/prc31/PRC3_Memory_Management_2/build/googlemock/CMakeFiles/gmock_main.dir
+/home/student/Desktop/prc31/PRC3_Memory_Management_2/build/googlemock/gtest/CMakeFiles/gtest.dir
+/home/student/Desktop/prc31/PRC3_Memory_Management_2/build/googlemock/gtest/CMakeFiles/gtest_main.dir

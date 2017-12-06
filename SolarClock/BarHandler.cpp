@@ -5,7 +5,6 @@ BarHandler::BarHandler(Motor** motors, DataHandler& dataHandler)
 	: barsReset(false)
 	, dataHandler(dataHandler)
 {
-
 	for (int i = 0; i < MotorCount; ++i)
 	{
 		this->motors[i] = motors[i];
@@ -24,13 +23,14 @@ BarHandler::~BarHandler()
 int BarHandler::CalculateSteps(int energy)
 {
 	//FORMULE VOOR ENERGY NAAR TIME COUNTER
+	return energy;
 }
 
-void BarHandler::CalculateSteps(int* energies, int* steps, int count)
+void BarHandler::CalculateSteps(const int* energies, int* steps, int count)
 {
 	if (energies == NULL || count <= 0)
 	{
-		return NULL;
+		return;
 	}
 
 	for (int i = 0; i < count; ++i)
@@ -65,7 +65,7 @@ void BarHandler::SetBar(int energy, int motorIndex)
 
 void BarHandler::SetAllBars(int* energies, int count)
 {
-	for (int i = 0; i < MotorCount; ++i)
+	for (int i = 0; i < count; ++i)
 	{
 		SetBar(energies[i], i);
 	}

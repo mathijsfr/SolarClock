@@ -25,7 +25,7 @@ States SolarClock::HandleInitializeClockState(Events ev)
         }
         case EV_TIME_UP:
         {
-            communicationHandler.RequestAllData();
+            //communicationHandler.RequestAllData();
             break;
         }
         case EV_DATA_RECEIVED:
@@ -33,7 +33,7 @@ States SolarClock::HandleInitializeClockState(Events ev)
         	if (barHandler.GetBarsReset())
         	{
                 int steps[MotorCount];
-        		 barHandler.CalculateSteps(communicationHandler.GetEnergies(), steps, MotorCount);
+        		barHandler.CalculateSteps(communicationHandler.GetEnergies(), steps, MotorCount);
         		barHandler.SetAllBars(steps, MotorCount);
         	}
         	break;
@@ -196,8 +196,8 @@ void SolarClock::HandleEvent(Events ev)
             break;
 
         default:
-            Serial.print("ERROR: illegal/unhandled state with number: ");
-            Serial.println(currentState);
+            //Serial.print("ERROR: illegal/unhandled state with number: ");
+            //Serial.println(currentState);
             break;
     };
 }

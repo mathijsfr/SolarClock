@@ -7,7 +7,8 @@
 using ::testing::Return;
 using ::testing::_;
 
-class TestHandleInitializeClockState : public ::testing::Test {
+class TestHandleInitializeClockState : public ::testing::Test 
+{
   protected:
 
     TestHandleInitializeClockState() {
@@ -19,9 +20,9 @@ class TestHandleInitializeClockState : public ::testing::Test {
         solarClock = NULL;
     }
 
+    mWatchDogTimer watchDogTimer;
     mBarHandler barHandler;
     mCommunicationHandler communicationHandler;
-    mWatchDogTimer watchDogTimer;
     SolarClock* solarClock;
 };
 

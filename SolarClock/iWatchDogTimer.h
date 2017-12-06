@@ -1,8 +1,6 @@
 #ifndef I_WATCH_DOG_TIMER_H
 #define I_WATCH_DOG_TIMER_H
 
-#include "Arduino.h"
-
 class iWatchDogTimer
 {
 public:

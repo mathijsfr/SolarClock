@@ -2,13 +2,13 @@ PRODUCT=StateTest
 
 CFLAGS=-Wall -Werror -Wextra -pedantic -ggdb -O0 -ISolarClock -Itest
 
-SOURCES=$(wildcard SolarClock/*.cpp) \
+SOURCES=$(wildcard SolarClock/SolarClock.cpp) \
         $(wildcard test/*.cpp)
 
 HEADERS=$(wildcard SolarClock/*.h) \
         $(wildcard test/*.h)
 
-TEST_LIBS=-lgtest -lgmock -lgmock_main -lpthread
+TEST_LIBS=-lgtest -lgtest_main -lgmock -lgmock_main -pthread
 
 CC=g++
 

@@ -1,12 +1,10 @@
-#include <EEPROM.h>
-
 #include "DataHandler.h"
 
 void DataHandler::StoreLength(Motor* motor)
 {
 	int steps = motor->GetSteps();
-	char highByte = highByte(steps);
-	char lowByte = lowByte(steps);
+	char highByte = (char)steps;
+	char lowByte = (char)(steps << 7);
 
 	EEPROM.write(motor->GetMotorPin(), highByte);
 	EEPROM.write(motor->GetMotorPin() + 1, lowByte);

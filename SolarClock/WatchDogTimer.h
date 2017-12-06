@@ -2,6 +2,7 @@
 #define WATCH_DOG_TIMER_H
 
 #include "iWatchDogTimer.h"
+#include "Arduino.h"
 
 class WatchDogTimer : public iWatchDogTimer
 {
