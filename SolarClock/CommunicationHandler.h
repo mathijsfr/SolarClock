@@ -38,7 +38,7 @@ private:
     bool DATA_RECEIVED;
     bool DATA_NOT_RECEIVED;
 
-    String localTime;
+    int localTime;
     int numberOfDHCPRequests;
     int currentMotor;
     int energies[MOTORCOUNT];

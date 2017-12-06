@@ -3,7 +3,7 @@
 CommunicationHandler::CommunicationHandler(byte* macAddress, String server)
 : DATA_RECEIVED(false)
 , DATA_NOT_RECEIVED(false)
-, localTime("")
+, localTime(-1)
 , numberOfDHCPRequests(0)
 , currentMotor(-1)
 , isAllowedToRequestEnergy(false)
@@ -94,7 +94,7 @@ void CommunicationHandler::RequestDHCP()
 /* sends get request to server */
 void CommunicationHandler::SendGetRequest()
 {
-	int stringLength = server.length() + 1;
+	int stringLength = server.length() + 1; // +1 for \0
 	
 	char serverAsChar[stringLength];
 	server.toCharArray(serverAsChar, stringLength);
@@ -133,12 +133,24 @@ void CommunicationHandler::ReadResponse(bool resetReadIndex)
 	    websiteData[readIndex + 1] = '\0';
 	    readIndex++;
   	}
+
+  	DATA_RECEIVED = true;
 }
 
 /* filters website data for isAllowed data */
 void CommunicationHandler::RequestIsAllowed()
 {
-	String isAllowedString("allowed");
+	char isAllowedLabel [] = "<span id=\"DataList1_allowedLabel_0\">";
+	String isAllowedString = filter(isAllowedLabel, sizeof(isAllowedLabel));
+
+	if(isAllowedString == "1")
+	{
+		isAllowedToRequestEnergy = true;
+	}
+	else if(isAllowedString == "0")
+	{
+		isAllowedToRequestEnergy = false;
+	}
 }
 
 /* filters website data for energy data */
@@ -146,7 +158,30 @@ void CommunicationHandler::RequestEnergy()
 {
 	if(isAllowedToRequestEnergy)
 	{
-		String energyString("energy");
+		char energyLabel[] = "<span id=\"DataList1_wHLabel_0\">";
+		String energiesString = filter(energyLabel, sizeof(energyLabel));
+
+		if(energiesString != "")
+		{
+			int energiesHours[MOTORCOUNT];
+			int energiesStringLength = energiesString.length();
+
+			int index = 0;
+			int position = 0;
+			for(int i = 0; i <= energiesStringLength; i++)
+			{
+				if(energiesString[i] == ',')
+				{
+					energiesHours[index] = energiesString.substring(position, i).toInt();
+					index = index + 1;
+					position = i + 1;
+				}
+			}
+
+			RequestLocalTime();
+
+			
+		}
 	}
 }
 
@@ -182,7 +217,7 @@ int CommunicationHandler::getLength(int startIndex)
 String CommunicationHandler::filter(char* toFind, int sizeOfToFind)
 {
 	int index = 0;
-	sizeOfToFind = sizeOfToFind - 1;
+	sizeOfToFind = sizeOfToFind - 1; // -1 remove \0
 
 	for (int indexText = 0; indexText < BUFFER_SIZE - sizeOfToFind; ++indexText)
 	{
