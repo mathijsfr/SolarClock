@@ -5,6 +5,8 @@
 #include "mWatchDogTimer.h"
 
 using ::testing::Return;
+using ::testing::ReturnPointee;
+using ::testing::SetArrayArgument;
 using ::testing::_;
 
 #define MotorCount 12
@@ -34,12 +36,21 @@ TEST_F(TestInitializeClockState, test_time_up_event)
     EXPECT_EQ(State_InitializeClock, solarClock->HandleInitializeClockState(EV_TIME_UP));
 }
 
-// TEST_F(TestInitializeClockState, test_data_received_event)
-// {
-//     int steps[MotorCount];
-//     EXPECT_CALL(communicationHandler, GetEnergies())
-//                 .WillOnce(Return(int*));
-//     EXPECT_CALL(barHandler, CalculateSteps(0));
-//     EXPECT_CALL(ui, StopClock());
-//     EXPECT_EQ(STATE_DOOR_OPENED_HEATING, microwave->HandleHeatingState(EV_DOOR_OPENED));
-// }
+TEST_F(TestInitializeClockState, test_clock_initialized_event)
+{
+    EXPECT_EQ(State_RequestEnergy, solarClock->HandleInitializeClockState(EV_CLOCK_INITIALIZED));
+}
+
+TEST_F(TestInitializeClockState, test_data_received_event)
+{
+    int steps[MotorCount];
+    int energies[MotorCount];
+
+    EXPECT_CALL(communicationHandler, GetEnergies())
+        .WillOnce(ReturnPointee(&energies));
+
+    EXPECT_CALL(barHandler, CalculateSteps(energies, steps, MotorCount)).WillOnce(SetArrayArgument<1>(steps, steps + MotorCount)); // ?
+    EXPECT_CALL(barHandler, SetBars(steps, MotorCount));
+
+    EXPECT_EQ(State_InitializeClock, solarClock->HandleInitializeClockState(EV_DATA_RECEIVED));
+}

@@ -27,3 +27,18 @@ class TestWatchDogHandlingState : public ::testing::Test
     mCommunicationHandler communicationHandler;
     SolarClock* solarClock;
 };
+
+
+TEST_F(TestWatchDogHandlingState, test_watchdog_done_event)
+{
+    EXPECT_EQ(State_RequestEnergy, solarClock->HandleWatchDogHandlingState(EV_WATCHDOG_DONE));
+}
+
+
+TEST_F(TestWatchDogHandlingState, test_watchdog_ticked_event)
+{
+    EXPECT_CALL(watchDogTimer, UpdateWatchDogCounter());
+    EXPECT_CALL(watchDogTimer, EnableWatchDog());
+
+    EXPECT_EQ(State_WatchDogHandling, solarClock->HandleWatchDogHandlingState(EV_WATCHDOG_TICKED));
+}

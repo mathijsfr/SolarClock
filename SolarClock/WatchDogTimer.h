@@ -11,7 +11,7 @@ public:
 
     void UpdateWatchDogCounter();
     void CalculateWatchDog(int localTime);
-    void EnableWatchDog(bool enable);
+    void EnableWatchDog();
 
     int GetWatchDogCounter() const;
     int GetWatchDogTicked() const;

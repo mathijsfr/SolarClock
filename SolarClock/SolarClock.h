@@ -14,6 +14,8 @@ class SolarClock
 public:
     SolarClock(iBarHandler& barHandler, iCommunicationHandler& communicationHandler, iWatchDogTimer& watchDogTimer);
 
+    void SetUp();
+
     void HandleEvent(Events ev);
     States HandleInitializeClockState(Events ev);
     States HandleRequestEnergyState(Events ev);

@@ -18,13 +18,9 @@ void WatchDogTimer::CalculateWatchDog(int localTime)
 	localTime++;
 }
 
-void WatchDogTimer::EnableWatchDog(bool enable)
+void WatchDogTimer::EnableWatchDog()
 {
-	//TODO this function
-	if (enable)
-	{
-		
-	}
+	
 }
 
 int WatchDogTimer::GetWatchDogCounter() const
