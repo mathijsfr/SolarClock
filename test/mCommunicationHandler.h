@@ -2,6 +2,7 @@
 #define M_COMMUNICATION_HANDLER_H
 
 #include <gmock/gmock.h>
+#include "LocalTime"
 #include "iCommunicationHandler.h"
 
 class mCommunicationHandler : public iCommunicationHandler
@@ -11,7 +12,7 @@ class mCommunicationHandler : public iCommunicationHandler
         MOCK_METHOD1(SetDataNotReceived, void(bool dataNotReceived));
         MOCK_METHOD1(SetIsAllowedToRequestEnergy, void(bool allowed));
 
-        MOCK_CONST_METHOD0(GetLocalTime, int());
+        MOCK_CONST_METHOD0(GetLocalTime, LocalTime());
         MOCK_CONST_METHOD0(GetNumberOfDHCPRequests, int());
         MOCK_CONST_METHOD0(GetCurrentMotor, int());
         MOCK_CONST_METHOD0(GetEnergies, const int*());

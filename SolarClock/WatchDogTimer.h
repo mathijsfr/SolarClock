@@ -10,18 +10,21 @@ public:
     WatchDogTimer();
 
     void UpdateWatchDogCounter();
-    void CalculateWatchDog(int localTime);
-    void EnableWatchDog(bool enable);
+    void CalculateWatchDog(LocalTime localTime);
+    void EnableWatchDog();
 
     int GetWatchDogCounter() const;
     int GetWatchDogTicked() const;
 
     void SetWatchDogTicked(bool watchDogTicked);
+    void SetSleepMode(bool enableSleepMode);
 
 private:
+	#define HOUR_IN_SECONDS 3600
+	#define POWERDOWNTIME_IN_SECONDS 8
+
     int watchDogCounter;
     bool watchDogTicked;
-
 };
 
 

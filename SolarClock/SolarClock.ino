@@ -97,8 +97,8 @@ Events GetEvent()
 	int motorIndex = communicationHandler->GetCurrentMotor();
 	if (barHandler->GetMotor(motorIndex)->GetMotorFinished())
 	{
-		barHandler->GetMotor(motorIndex)->SetMotorFinished(false);
-		return EV_BAR_SET;
+		// barHandler->GetMotor(motorIndex)->SetMotorFinished(false);
+		// return EV_BAR_SET;
 	}
 
 	return NO_EVENT;

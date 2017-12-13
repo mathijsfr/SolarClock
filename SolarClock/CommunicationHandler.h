@@ -3,6 +3,8 @@
 
 #include "SPI.h"
 #include "Ethernet.h"
+
+#include "LocalTime.h"
 #include "iCommunicationHandler.h"
 
 #define MOTORCOUNT 12
@@ -17,7 +19,7 @@ public:
     void SetDataNotReceived(bool dataNotReceived);
   	void SetIsAllowedToRequestEnergy(bool allowed);
 
-    int GetLocalTime() const;
+    LocalTime GetLocalTime() const;
     int GetNumberOfDHCPRequests() const;
     int GetCurrentMotor() const;
     const int* GetEnergies() const;
@@ -30,10 +32,10 @@ public:
     bool RequestIsAllowed();
 
 private:
-    bool DATA_RECEIVED;
-    bool DATA_NOT_RECEIVED;
+    bool dataReceived;
+    bool dataNotReceived;
 
-    int localTime;
+    LocalTime localTime;
     int numberOfDHCPRequests;
     int currentMotor;
     int energies[MOTORCOUNT];

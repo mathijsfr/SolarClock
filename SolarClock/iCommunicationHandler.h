@@ -2,6 +2,7 @@
 #define I_COMMUNICATION_HANDLER_H
 
 #include "Arduino.h"
+#include "LocalTime.h"
 
 class iCommunicationHandler
 {
@@ -10,7 +11,7 @@ public:
     virtual void SetDataNotReceived(bool dataNotReceived) = 0;
   	virtual void SetIsAllowedToRequestEnergy(bool allowed) = 0;
 
-    virtual int GetLocalTime() const = 0;
+    virtual LocalTime GetLocalTime() const = 0;
     virtual int GetNumberOfDHCPRequests() const = 0;
     virtual int GetCurrentMotor() const = 0;
     virtual const int* GetEnergies() const = 0;
