@@ -2,8 +2,10 @@
 #include "CommunicationHandler.h"
 #include "BarHandler.h"
 #include "WatchDogTimer.h"
+#include "Timer.h"
 
 #define MotorCount 12
+#define TimerIntervalInMillis 10
 
 String server("virtueusage.azurewebsites.net/");
 byte mac[6] = {0x01, 0x01, 0x01, 0x01, 0x01, 0x01};
@@ -26,9 +28,11 @@ iBarHandler* barHandler;
 iCommunicationHandler* communicationHandler;
 iWatchDogTimer* watchDogTimer;
 
+Timer* timer;
+
 SolarClock* solarClock;
 
-bool timerInteruptTicked;
+bool timerInterruptTicked;
 
 void setup()
 {
@@ -45,16 +49,18 @@ void setup()
 	barHandler = new BarHandler(motors, *dataHandler);
 	communicationHandler = new CommunicationHandler(mac, server);
 	watchDogTimer = new WatchDogTimer();
+	timer = new Timer(TimerIntervalInMillis);
 
 	solarClock = new SolarClock(*barHandler, *communicationHandler, *watchDogTimer);
 
-	timerInteruptTicked = false;
+	timerInterruptTicked = false;
 }
 
 void loop()
 {
 	Events ev = GetEvent();
 	solarClock->HandleEvent(ev);
+	checkTimerInterupt();
 }
 
 Events GetEvent()
@@ -88,20 +94,19 @@ Events GetEvent()
 		return EV_WATCHDOG_DONE;
 	}
 
-	if (timerInteruptTicked)
+	if (timerInterruptTicked)
 	{
-		timerInteruptTicked = false;
+		timerInterruptTicked = false;
 		return EV_TIME_UP;
-	}
-
-	int motorIndex = communicationHandler->GetCurrentMotor();
-	if (barHandler->GetMotor(motorIndex)->GetMotorFinished())
-	{
-		// barHandler->GetMotor(motorIndex)->SetMotorFinished(false);
-		// return EV_BAR_SET;
 	}
 
 	return NO_EVENT;
 }
 
-//HIER MOET NOG EEN TIMER INTERUPT
+void checkTimerInterupt()
+{
+	if(timer->TimeIsPast())
+	{
+		timerInterruptTicked = true;
+	}
+}
