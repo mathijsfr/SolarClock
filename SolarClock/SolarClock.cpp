@@ -12,6 +12,11 @@ SolarClock::SolarClock(iBarHandler& barHandler, iCommunicationHandler& communica
 {
 }
 
+void SolarClock::SetUp()
+{
+    barHandler.ResetBars(MotorCount);
+}
+
 States SolarClock::HandleInitializeClockState(Events ev)
 {
     States result = State_InitializeClock;
@@ -61,7 +66,11 @@ States SolarClock::HandleRequestEnergyState(Events ev)
             int steps = barHandler.CalculateSteps(energy);
 
             barHandler.SetBar(motorIndex, steps);
+
+            watchDogTimer.CalculateWatchDog(communicationHandler.GetLocalTime());
+
             result = State_WatchDogHandling;
+            watchDogTimer.EnableWatchDog();
             break;
 		}
         case EV_DATA_NOT_RECEIVED:
@@ -99,14 +108,13 @@ States SolarClock::HandleWatchDogHandlingState(Events ev)
     {
         case EV_WATCHDOG_DONE:
         {
-            watchDogTimer.EnableWatchDog(false);
             result = State_RequestEnergy;
             break;
         }
         case EV_WATCHDOG_TICKED:
         {
             watchDogTimer.UpdateWatchDogCounter();
-            watchDogTimer.EnableWatchDog(true);
+            watchDogTimer.EnableWatchDog();
             break;
         }
         default:
