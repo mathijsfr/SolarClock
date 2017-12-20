@@ -26,10 +26,9 @@ public:
     bool GetIsConnected();
     bool GetDataReceived() const;
     bool GetDataNotReceived() const;
-    bool GetIsAllowedToRequestEnergy() const;
+    bool GetIsAllowedToRequestEnergy();
 
     void Update();
-    bool RequestIsAllowed();
 
 private:
     bool dataReceived;

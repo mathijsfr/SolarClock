@@ -10,7 +10,7 @@
 String server("virtueusage.azurewebsites.net/");
 byte mac[6] = {0x90, 0xA2, 0xDA, 0x0E, 0x83, 0x1C};
 MotorPins motorPins[MotorCount] = {	{ 30, 29, 28 }, // motor 1
-									{ 2, 3, 4 }, // motor 2
+									{ 24, 23, 22 }, // motor 2
 									{ 2, 3, 4 }, // motor 3
 									{ 2, 3, 4 }, // motor 4
 									{ 2, 3, 4 }, // motor 5
@@ -56,16 +56,14 @@ void setup()
 	timerInterruptTicked = false;
 }
 
-#include "Direction.h"
-
-iMotor* motor = new Motor(motorPins[0]);
-
 void loop()
 {
-	motor->SetDirection(Forward);
-	motor->MotorOnForSteps(50);
-	delay(1000);
-}
+	LocalTime localTime = {3, 58, 47};
+	watchDogTimer->CalculateWatchDog(localTime);
+
+	Serial.println(watchDogTimer->GetWatchDogCounter());
+	delay(200000000);
+}	
 
 Events GetEvent()
 {

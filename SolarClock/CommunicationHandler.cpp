@@ -68,8 +68,16 @@ bool CommunicationHandler::GetDataNotReceived() const
 	return dataNotReceived;
 }
 
-bool CommunicationHandler::GetIsAllowedToRequestEnergy() const
+bool CommunicationHandler::GetIsAllowedToRequestEnergy()
 {
+	if(!isAllowedToRequestEnergy)
+	{
+		if(localTime.minutes == 0 || localTime.minutes == 1)
+		{
+			isAllowedToRequestEnergy = true;
+		}
+	}
+
 	return isAllowedToRequestEnergy;
 }
 
@@ -82,7 +90,7 @@ void CommunicationHandler::Update()
 		if(sendGetRequest())
 		{
 			readResponse();
-			if(RequestIsAllowed() && requestEnergy() && requestLocalTime())
+			if(requestEnergy() && requestLocalTime())
 			{
 				dataReceived = true;
 			}
@@ -95,31 +103,6 @@ void CommunicationHandler::Update()
 	}
 
 	dataNotReceived = true;
-}
-
-/* filters website data for isAllowed data */
-bool CommunicationHandler::RequestIsAllowed()
-{
-	char isAllowedLabel [] = "<span id=\"DataList1_allowedLabel_0\">";
-	String isAllowedString = filter(isAllowedLabel, sizeof(isAllowedLabel));
-
-	if(isAllowedString != "")
-	{
-		if(isAllowedString == "1")
-		{
-			isAllowedToRequestEnergy = true;
-		}
-		else if(isAllowedString == "0")
-		{
-			isAllowedToRequestEnergy = false;
-		}
-
-		dataReceived = true;
-		return true;
-	}
-
-	dataNotReceived = true;
-	return false;
 }
 
 /*PRIVATE*/

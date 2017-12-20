@@ -18,10 +18,9 @@ public:
     virtual bool GetIsConnected() = 0;
     virtual bool GetDataReceived() const = 0;
     virtual bool GetDataNotReceived() const = 0;
-    virtual bool GetIsAllowedToRequestEnergy() const = 0;
+    virtual bool GetIsAllowedToRequestEnergy()= 0;
 
     virtual void Update() = 0;
-    virtual bool RequestIsAllowed() = 0;
 
 };
 

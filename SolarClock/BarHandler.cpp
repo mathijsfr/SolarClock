@@ -9,6 +9,8 @@ BarHandler::BarHandler(Motor** motors, DataHandler& dataHandler)
 	{
 		this->motors[i] = motors[i];
 	}
+
+	pinMode(relaysPin, OUTPUT);
 }
 
 BarHandler::~BarHandler()
@@ -42,9 +44,10 @@ void BarHandler::CalculateSteps(const int* energies, int* steps, int count)
 void BarHandler::ResetBar(int motorIndex)
 {
 	dataHandler.RetreiveLengths(&motors[motorIndex], 1);
+	Serial.println(motors[motorIndex]->GetSteps());
 	motors[motorIndex]->SetDirection(Backward);
 	motors[motorIndex]->MotorOnForSteps(motors[motorIndex]->GetSteps());
-
+	
 	motors[motorIndex]->SetMotorFinished(false);
 }
 
@@ -61,6 +64,7 @@ void BarHandler::SetBar(int energy, int motorIndex)
 	int steps = CalculateSteps(energy);
 	motors[motorIndex]->SetDirection(Forward);
 	motors[motorIndex]->MotorOnForSteps(steps);
+	dataHandler.StoreLength(motors[motorIndex]);
 }
 
 void BarHandler::SetBars(int* energies, int count)

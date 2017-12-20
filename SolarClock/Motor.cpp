@@ -2,6 +2,7 @@
 
 #define pulseWidthDelay 5
 
+
 Motor::Motor(MotorPins pins)
 	: motorPins(pins)
 	, steps(0)
@@ -10,6 +11,7 @@ Motor::Motor(MotorPins pins)
 	pinMode(motorPins.directionPin, OUTPUT);
 	pinMode(motorPins.stepPin, OUTPUT);
 	pinMode(motorPins.mode1Pin, OUTPUT);
+	pinMode(relaysPin, OUTPUT);
 }
 
 Motor::~Motor()
@@ -19,6 +21,7 @@ Motor::~Motor()
 void Motor::MotorOnForSteps(int steps)
 {
 	digitalWrite(motorPins.mode1Pin, LOW);
+	digitalWrite(relaysPin, HIGH);
 
 	for (int i = 0; i < steps; ++i)
 	{
@@ -29,6 +32,7 @@ void Motor::MotorOnForSteps(int steps)
 	    delay(1);
 	}
 
+	digitalWrite(relaysPin, LOW);
 	digitalWrite(motorPins.mode1Pin, HIGH);
 	this->steps = steps;
 }

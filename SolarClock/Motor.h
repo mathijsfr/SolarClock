@@ -6,6 +6,8 @@
 
 #include "Arduino.h"
 
+#define relaysPin 50
+
 class Motor : public iMotor
 {
 public:

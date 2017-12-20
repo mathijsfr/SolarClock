@@ -2,6 +2,7 @@
 #define I_BAR_HANDLER_H
 
 #include "DataHandler.h"
+#include "Motor.h"
 
 #define MotorCount 12
 
