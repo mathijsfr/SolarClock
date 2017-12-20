@@ -8,8 +8,8 @@
 #define TimerIntervalInMillis 10
 
 String server("virtueusage.azurewebsites.net/");
-byte mac[6] = {0x01, 0x01, 0x01, 0x01, 0x01, 0x01};
-MotorPins motorPins[MotorCount] = {	{ 2, 3, 4 }, // motor 1
+byte mac[6] = {0x90, 0xA2, 0xDA, 0x0E, 0x83, 0x1C};
+MotorPins motorPins[MotorCount] = {	{ 30, 29, 28 }, // motor 1
 									{ 2, 3, 4 }, // motor 2
 									{ 2, 3, 4 }, // motor 3
 									{ 2, 3, 4 }, // motor 4
@@ -56,11 +56,15 @@ void setup()
 	timerInterruptTicked = false;
 }
 
+#include "Direction.h"
+
+iMotor* motor = new Motor(motorPins[0]);
+
 void loop()
 {
-	Events ev = GetEvent();
-	solarClock->HandleEvent(ev);
-	checkTimerInterupt();
+	motor->SetDirection(Forward);
+	motor->MotorOnForSteps(50);
+	delay(1000);
 }
 
 Events GetEvent()

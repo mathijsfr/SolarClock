@@ -25,9 +25,12 @@ void Motor::MotorOnForSteps(int steps)
 		digitalWrite(motorPins.stepPin, HIGH);
 	    delayMicroseconds(pulseWidthDelay);
 	    digitalWrite(motorPins.stepPin, LOW);
+
+	    delay(1);
 	}
 
 	digitalWrite(motorPins.mode1Pin, HIGH);
+	this->steps = steps;
 }
 
 void Motor::SetDirection(Direction direction)
