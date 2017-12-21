@@ -5,6 +5,7 @@
 
 typedef struct 
 {
+	int sleepPin;
 	int directionPin;
 	int stepPin;
 	int mode1Pin;
