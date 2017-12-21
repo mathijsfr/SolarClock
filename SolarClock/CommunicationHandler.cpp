@@ -90,9 +90,10 @@ void CommunicationHandler::Update()
 		if(sendGetRequest())
 		{
 			readResponse();
-			if(requestEnergy() && requestLocalTime())
+			if(requestLocalTime() && requestEnergy())
 			{
 				dataReceived = true;
+				return;
 			}
 		}
 	}
@@ -116,13 +117,10 @@ bool CommunicationHandler::sendGetRequest()
 
 	if (client.connect(serverAsChar, 80) == 1)
 	{
-		Serial.println("Connected");
-
-		client.println("GET / HTTP/1.1");
-		client.print("Host: ");
-		client.println(server);
-		client.println("Connection: close");
-		client.println();
+	    client.println("GET / HTTP/1.1");
+	    client.println("Host: virtueusage.azurewebsites.net");
+	    client.println("Connection: close");
+	    client.println();
 
 		return true;
 	}
@@ -135,53 +133,57 @@ bool CommunicationHandler::sendGetRequest()
 void CommunicationHandler::readResponse()
 {
 	int readIndex = 0;
+	Timer* timer = new Timer(5000);	
 
-	while (client.available())
-  	{	
-	    char c = client.read();
+	while(GetIsConnected())
+	{
+	  	if(timer->TimeIsPast())
+	  	{
+	  		break;
+	  	}
 
-	    websiteData[readIndex] = c;
-	    websiteData[readIndex + 1] = '\0';
-	    readIndex++;
-  	}
+		while (client.available())	
+	  	{	
+		    char c = client.read();
+
+		    websiteData[readIndex] = c;
+		    websiteData[readIndex + 1] = '\0';
+		    readIndex++;
+	  	}
+	 }
 }
 
 /*PRIVATE*/
 /* filters website data for energy data */
 bool CommunicationHandler::requestEnergy()
 {
-	if(isAllowedToRequestEnergy)
-	{
-		bool succesful = true;
+	bool succesful = true;
 
-		for (int i = 1; i < 13; i++)
-	    {
-			int bufferSize = 22;
+	for (int i = 1; i < 13; i++)
+    {
+		int bufferSize = 22;
 
-			if(i >= 10)
-			{
-				bufferSize++;
-			}
+		if(i >= 10)
+		{
+			bufferSize++;
+		}
 
-			char energyLabel[bufferSize];
-			sprintf(energyLabel, "<span id=\"ctl01_L_%d\">", i);
+		char energyLabel[bufferSize];
+		sprintf(energyLabel, "<span id=\"ctl01_L_%d\">", i);
 
-			String energieValueString = filter(energyLabel, sizeof(energyLabel));
-			if (energieValueString != "")
-			{
-				energies[i-1] = energieValueString.toInt();
-			}
-			else
-			{
-				succesful = false;
-				break;
-			}
-	    }
+		String energieValueString = filter(energyLabel, sizeof(energyLabel));
+		if (energieValueString != "")
+		{
+			energies[i-1] = energieValueString.toInt();
+		}
+		else
+		{
+			succesful = false;
+			break;
+		}
+    }
 
-		return succesful;
-	}
-
-	return false;
+	return succesful;
 }
 
 /*PRIVATE*/
@@ -196,6 +198,8 @@ bool CommunicationHandler::requestLocalTime()
       localTime.hours = (byte)localTimeString.substring(0, 2).toInt();
       localTime.minutes = (byte)localTimeString.substring(3, 5).toInt();
       localTime.seconds = (byte)localTimeString.substring(6, 8).toInt();
+
+      return true;
     }
 
 	return false;

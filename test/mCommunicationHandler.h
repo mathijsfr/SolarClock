@@ -22,7 +22,6 @@ class mCommunicationHandler : public iCommunicationHandler
         MOCK_CONST_METHOD0(GetIsAllowedToRequestEnergy, bool());
 
         MOCK_METHOD0(Update, void());
-        MOCK_METHOD0(RequestIsAllowed, bool());
 };
 
 #endif

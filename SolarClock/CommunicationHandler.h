@@ -8,7 +8,7 @@
 #include "iCommunicationHandler.h"
 
 #define MOTORCOUNT 12
-#define BUFFER_SIZE 2000
+#define BUFFER_SIZE 2500
 
 class CommunicationHandler : public iCommunicationHandler
 {

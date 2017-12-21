@@ -7,8 +7,8 @@
 #define MotorCount 12
 #define TimerIntervalInMillis 10
 
-String server("virtueusage.azurewebsites.net/");
-byte mac[6] = {0x90, 0xA2, 0xDA, 0x0E, 0x83, 0x1C};
+String server("virtueusage.azurewebsites.net");
+byte mac[6] = {0x90, 0xA2, 0xDA, 0x0D, 0x1A, 0x6A};
 MotorPins motorPins[MotorCount] = {	{ 30, 29, 28 }, // motor 1
 									{ 24, 23, 22 }, // motor 2
 									{ 2, 3, 4 }, // motor 3
@@ -58,11 +58,7 @@ void setup()
 
 void loop()
 {
-	LocalTime localTime = {3, 58, 47};
-	watchDogTimer->CalculateWatchDog(localTime);
 
-	Serial.println(watchDogTimer->GetWatchDogCounter());
-	delay(200000000);
 }	
 
 Events GetEvent()

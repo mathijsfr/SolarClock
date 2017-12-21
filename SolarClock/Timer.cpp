@@ -2,7 +2,7 @@
 
 Timer::Timer(int intervalMillis)
 	: interval(interval)
-	, previousMillis(0)
+	, previousMillis(millis())
 {
 	//Do nothing
 }
