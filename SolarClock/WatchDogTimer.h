@@ -14,7 +14,7 @@ public:
     void EnableWatchDog();
 
     int GetWatchDogCounter() const;
-    int GetWatchDogTicked() const;
+    bool GetWatchDogTicked() const;
 
     void SetWatchDogTicked(bool watchDogTicked);
     void SetSleepMode(bool enableSleepMode);

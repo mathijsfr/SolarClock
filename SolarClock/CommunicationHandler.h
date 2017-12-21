@@ -6,6 +6,7 @@
 
 #include "LocalTime.h"
 #include "iCommunicationHandler.h"
+#include "Timer.h"
 
 #define MOTORCOUNT 12
 #define BUFFER_SIZE 2500

@@ -11,7 +11,7 @@ public:
     virtual void EnableWatchDog() = 0;
 
     virtual int GetWatchDogCounter() const = 0;
-    virtual int GetWatchDogTicked() const = 0;
+    virtual bool GetWatchDogTicked() const = 0;
 
     virtual void SetWatchDogTicked(bool watchDogTicked) = 0;
     virtual void SetSleepMode(bool enableSleepMode) = 0;

@@ -22,6 +22,8 @@ WatchDogTimer::WatchDogTimer()
 	WDTCSR = 0x61;
 
 	sei();
+
+	SetSleepMode(false);
 }
 
 void WatchDogTimer::UpdateWatchDogCounter()
@@ -48,7 +50,7 @@ int WatchDogTimer::GetWatchDogCounter() const
 	return watchDogCounter;
 }
 
-int WatchDogTimer::GetWatchDogTicked() const
+bool WatchDogTimer::GetWatchDogTicked() const
 {
 	return watchDogTicked;
 }

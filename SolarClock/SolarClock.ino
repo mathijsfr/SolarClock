@@ -7,7 +7,7 @@
 #define MotorCount 12
 #define TimerIntervalInMillis 10
 
-String server("virtueusage.azurewebsites.net/");
+String server("virtueusage.azurewebsites.net");
 byte mac[6] = {0x90, 0xA2, 0xDA, 0x0D, 0x1A, 0x6A};
 MotorPins motorPins[MotorCount] = {	{ 31, 30, 29, 28 }, // motor 1
 									{ 25, 24, 23, 22 }, // motor 2
@@ -55,6 +55,7 @@ void setup()
 
 	timerInterruptTicked = false;
 	
+	solarClock->SetUp();
 }
 
 void loop()
@@ -69,37 +70,41 @@ Events GetEvent()
 {
 	if (watchDogTimer->GetWatchDogTicked())
 	{
-		Serial.println("test");
 		watchDogTimer->SetWatchDogTicked(false);
-		return EV_WATCHDOG_TICKED;
+		if (watchDogTimer->GetWatchDogCounter() == 0)
+		{
+			Serial.println("GetWatchDogCounter");
+			return EV_WATCHDOG_DONE;
+		}
+		else
+		{
+			Serial.println("watchDogTimer");
+			
+			return EV_WATCHDOG_TICKED;
+		}
 	}
 
 	if (communicationHandler->GetDataNotReceived())
 	{
-		Serial.println("test");
+		Serial.println("GetDataNotReceived");
 		communicationHandler->SetDataNotReceived(false);
 		return EV_DATA_NOT_RECEIVED;
 	}
 	
 	if (communicationHandler->GetDataReceived())
 	{
-		Serial.println("test");
+		Serial.println("GetDataReceived");
 		communicationHandler->SetDataReceived(false);
 		return EV_DATA_RECEIVED;
 	}
 	
 	if (barHandler->GetBarsReset())
 	{
-		Serial.println("ayyyyy");
+		Serial.println("GetBarsReset");
 		barHandler->SetBarsReset(false);
 		return EV_CLOCK_INITIALIZED;
 	}
 
-	if (watchDogTimer->GetWatchDogCounter() <= 0)
-	{
-		Serial.println("test");
-		return EV_WATCHDOG_DONE;
-	}
 
 	if (timerInterruptTicked)
 	{

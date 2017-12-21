@@ -89,9 +89,11 @@ void CommunicationHandler::Update()
 
 		if(sendGetRequest())
 		{
+			Serial.println("send");
 			readResponse();
 			if(requestLocalTime() && requestEnergy())
 			{
+			Serial.println("received");
 				dataReceived = true;
 				return;
 			}
