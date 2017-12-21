@@ -34,7 +34,7 @@ void WatchDogTimer::CalculateWatchDog(LocalTime localTime)
 {
 	int amountOfSeconds = HOUR_IN_SECONDS - (localTime.minutes * 60 + localTime.seconds);
 
-	watchDogCounter = amountOfSeconds / POWERDOWNTIME_IN_SECONDS;
+	watchDogCounter = 1; //amountOfSeconds / POWERDOWNTIME_IN_SECONDS;
 }
 
 void WatchDogTimer::EnableWatchDog()

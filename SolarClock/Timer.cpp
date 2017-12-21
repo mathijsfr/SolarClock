@@ -11,6 +11,7 @@ bool Timer::TimeIsPast()
 {
 	if((millis() - previousMillis) >= interval)
 	{
+		previousMillis = millis();
 		return true;
 	} 
 

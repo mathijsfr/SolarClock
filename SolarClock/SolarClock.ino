@@ -54,49 +54,56 @@ void setup()
 	solarClock = new SolarClock(*barHandler, *communicationHandler, *watchDogTimer);
 
 	timerInterruptTicked = false;
+	
 }
 
 void loop()
 {
-	barHandler->SetBar(200, 1);
-	delay(1000);
-	barHandler->ResetBar(1);
-	delay(200000000);
+	Events ev = GetEvent();
+	solarClock->HandleEvent(ev);
+
+	checkTimerInterupt();
 }	
 
 Events GetEvent()
 {
 	if (watchDogTimer->GetWatchDogTicked())
 	{
+		Serial.println("test");
 		watchDogTimer->SetWatchDogTicked(false);
 		return EV_WATCHDOG_TICKED;
 	}
 
 	if (communicationHandler->GetDataNotReceived())
 	{
+		Serial.println("test");
 		communicationHandler->SetDataNotReceived(false);
 		return EV_DATA_NOT_RECEIVED;
 	}
 	
 	if (communicationHandler->GetDataReceived())
 	{
+		Serial.println("test");
 		communicationHandler->SetDataReceived(false);
 		return EV_DATA_RECEIVED;
 	}
 	
 	if (barHandler->GetBarsReset())
 	{
+		Serial.println("ayyyyy");
 		barHandler->SetBarsReset(false);
 		return EV_CLOCK_INITIALIZED;
 	}
 
 	if (watchDogTimer->GetWatchDogCounter() <= 0)
 	{
+		Serial.println("test");
 		return EV_WATCHDOG_DONE;
 	}
 
 	if (timerInterruptTicked)
 	{
+		Serial.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 		timerInterruptTicked = false;
 		return EV_TIME_UP;
 	}

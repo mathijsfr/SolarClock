@@ -77,8 +77,8 @@ bool CommunicationHandler::GetIsAllowedToRequestEnergy()
 			isAllowedToRequestEnergy = true;
 		}
 	}
-
-	return isAllowedToRequestEnergy;
+/////////////////////////////
+	return true;
 }
 
 void CommunicationHandler::Update()
