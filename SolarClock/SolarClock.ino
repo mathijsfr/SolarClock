@@ -8,19 +8,19 @@
 #define TimerIntervalInMillis 10
 
 String server("virtueusage.azurewebsites.net/");
-byte mac[6] = {0x90, 0xA2, 0xDA, 0x0E, 0x83, 0x1C};
-MotorPins motorPins[MotorCount] = {	{ 30, 29, 28 }, // motor 1
-									{ 24, 23, 22 }, // motor 2
-									{ 2, 3, 4 }, // motor 3
-									{ 2, 3, 4 }, // motor 4
-									{ 2, 3, 4 }, // motor 5
-									{ 2, 3, 4 }, // motor 6
-									{ 2, 3, 4 }, // motor 7
-									{ 2, 3, 4 }, // motor 8
-									{ 2, 3, 4 }, // motor 9
-									{ 2, 3, 4 }, // motor 10
-									{ 2, 3, 4 }, // motor 11
-									{ 2, 3, 4 }}; // motor 12
+byte mac[6] = {0x90, 0xA2, 0xDA, 0x0D, 0x1A, 0x6A};
+MotorPins motorPins[MotorCount] = {	{ 31, 30, 29, 28 }, // motor 1
+									{ 25, 24, 23, 22 }, // motor 2
+									{ 1, 2, 3, 4 }, // motor 3
+									{ 1, 2, 3, 4 }, // motor 4
+									{ 1, 2, 3, 4 }, // motor 5
+									{ 1, 2, 3, 4 }, // motor 6
+									{ 1, 2, 3, 4 }, // motor 7
+									{ 1, 2, 3, 4 }, // motor 8
+									{ 1, 2, 3, 4 }, // motor 9
+									{ 1, 2, 3, 4 }, // motor 10
+									{ 1, 2, 3, 4 }, // motor 11
+									{ 1, 2, 3, 4 }}; // motor 12
 
 DataHandler* dataHandler;
 iBarHandler* barHandler;
@@ -58,10 +58,9 @@ void setup()
 
 void loop()
 {
-	LocalTime localTime = {3, 58, 47};
-	watchDogTimer->CalculateWatchDog(localTime);
-
-	Serial.println(watchDogTimer->GetWatchDogCounter());
+	barHandler->SetBar(200, 1);
+	delay(1000);
+	barHandler->ResetBar(1);
 	delay(200000000);
 }	
 

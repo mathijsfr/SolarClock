@@ -11,7 +11,7 @@ Motor::Motor(MotorPins pins)
 	pinMode(motorPins.directionPin, OUTPUT);
 	pinMode(motorPins.stepPin, OUTPUT);
 	pinMode(motorPins.mode1Pin, OUTPUT);
-	pinMode(relaysPin, OUTPUT);
+	pinMode(motorPins.sleepPin, OUTPUT);
 }
 
 Motor::~Motor()
@@ -21,7 +21,7 @@ Motor::~Motor()
 void Motor::MotorOnForSteps(int steps)
 {
 	digitalWrite(motorPins.mode1Pin, LOW);
-	digitalWrite(relaysPin, HIGH);
+	digitalWrite(motorPins.sleepPin, HIGH);
 
 	for (int i = 0; i < steps; ++i)
 	{
@@ -32,7 +32,7 @@ void Motor::MotorOnForSteps(int steps)
 	    delay(1);
 	}
 
-	digitalWrite(relaysPin, LOW);
+	digitalWrite(motorPins.sleepPin, LOW);
 	digitalWrite(motorPins.mode1Pin, HIGH);
 	this->steps = steps;
 }
