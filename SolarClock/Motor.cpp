@@ -20,8 +20,8 @@ Motor::~Motor()
 
 void Motor::MotorOnForSteps(int steps)
 {
-	digitalWrite(motorPins.mode1Pin, LOW);
 	digitalWrite(motorPins.sleepPin, HIGH);
+	digitalWrite(motorPins.mode1Pin, LOW);
 
 	for (int i = 0; i < steps; ++i)
 	{
@@ -32,8 +32,8 @@ void Motor::MotorOnForSteps(int steps)
 	    delay(1);
 	}
 
-	digitalWrite(motorPins.sleepPin, LOW);
 	digitalWrite(motorPins.mode1Pin, HIGH);
+	digitalWrite(motorPins.sleepPin, LOW);
 	this->steps = steps;
 }
 

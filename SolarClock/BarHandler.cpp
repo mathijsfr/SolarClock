@@ -24,8 +24,7 @@ BarHandler::~BarHandler()
 
 int BarHandler::CalculateSteps(int energy)
 {
-	//FORMULE VOOR ENERGY NAAR TIME COUNTER
-	return energy;
+	return ((MULTIPLIER * energy) + STEPS_BAR_VISUAL)/GEAR_RADIUS;
 }
 
 void BarHandler::CalculateSteps(const int* energies, int* steps, int count)

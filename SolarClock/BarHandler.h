@@ -25,11 +25,12 @@ public:
     void SetBarsReset(bool barsReset);
 
 private:
+    #define MULTIPLIER 2
+    #define GEAR_RADIUS 2.5
+    #define STEPS_BAR_VISUAL 400
     Motor* motors[MotorCount];
     bool barsReset;
     DataHandler& dataHandler;
-
-
 };
 
 

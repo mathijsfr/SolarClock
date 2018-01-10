@@ -11,7 +11,7 @@ String server("virtueusage.azurewebsites.net");
 byte mac[6] = {0x90, 0xA2, 0xDA, 0x0D, 0x1A, 0x6A};
 MotorPins motorPins[MotorCount] = {	{ 31, 30, 29, 28 }, // motor 1
 									{ 25, 24, 23, 22 }, // motor 2
-									{ 1, 2, 3, 4 }, // motor 3
+									{ 6, 2, 3, 4}, // motor 3
 									{ 1, 2, 3, 4 }, // motor 4
 									{ 1, 2, 3, 4 }, // motor 5
 									{ 1, 2, 3, 4 }, // motor 6
@@ -37,7 +37,6 @@ bool timerInterruptTicked;
 void setup()
 {
 	Serial.begin(9600);
-
 
 	Motor* motors[MotorCount];
 	for (int i = 0; i < MotorCount; ++i)
