@@ -3,8 +3,11 @@
 
 #include "iBarHandler.h"
 #include "Arduino.h"
+#include "ConfigFile.h"
 
 #define MotorCount 12
+
+
 
 class BarHandler : public iBarHandler
 {
@@ -25,9 +28,6 @@ public:
     void SetBarsReset(bool barsReset);
 
 private:
-    #define MULTIPLIER 2
-    #define GEAR_RADIUS 2.5
-    #define STEPS_BAR_VISUAL 400
     Motor* motors[MotorCount];
     bool barsReset;
     DataHandler& dataHandler;
