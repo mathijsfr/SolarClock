@@ -7,7 +7,7 @@ class Timer
 {
 public:
 	Timer(int intervalMillis);
-	bool TimeIsPast();
+	bool IsTimePast();
 
 private:
 	int interval;

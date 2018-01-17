@@ -1,17 +1,22 @@
 #include "CommunicationHandler.h"
 
+#define timeOut 5000
+#define dataNotReceivedTreshold 10
+#define hoursInClock 12
+
 CommunicationHandler::CommunicationHandler(byte* macAddress, String server)
-: dataReceived(false)
-, dataNotReceived(false)
-, numberOfDHCPRequests(0)
-, currentMotor(-1)
-, isAllowedToRequestEnergy(false)
-, server(server)
+	: dataReceived(false)
+	, dataNotReceived(false)
+	, numberOfDHCPRequests(0)
+	, currentMotor(-1)
+	, isAllowedToRequestEnergy(false)
+	, server(server)
 
 {
-	mac[0]=macAddress[0]; mac[1]=macAddress[1];
-	mac[2]=macAddress[2]; mac[3]=macAddress[3];
-	mac[4]=macAddress[4]; mac[5]=macAddress[5];
+	for (int i = 0; i < macLength; ++i)
+	{
+		mac[i] = macAddress[i];
+	}
 
 	localTime.hours = 0;
 	localTime.minutes = 0;
@@ -45,7 +50,7 @@ int CommunicationHandler::GetNumberOfDHCPRequests() const
 
 int CommunicationHandler::GetCurrentMotor() const
 {
-	return localTime.hours >= 12 ? localTime.hours - 12 : localTime.hours;
+	return localTime.hours >= hoursInClock ? localTime.hours - hoursInClock : localTime.hours;
 }
 
 const int* CommunicationHandler::GetEnergies() const
@@ -93,7 +98,7 @@ void CommunicationHandler::Update()
 			readResponse();
 			if(requestLocalTime() && requestEnergy())
 			{
-			Serial.println("received");
+				Serial.println("received");
 				dataReceived = true;
 				return;
 			}
@@ -135,11 +140,11 @@ bool CommunicationHandler::sendGetRequest()
 void CommunicationHandler::readResponse()
 {
 	int readIndex = 0;
-	Timer* timer = new Timer(5000);	
+	Timer* timer = new Timer(timeOut);	
 
 	while(GetIsConnected())
 	{
-	  	if(timer->TimeIsPast())
+	  	if(timer->IsTimePast())
 	  	{
 	  		break;
 	  	}
@@ -213,7 +218,7 @@ void CommunicationHandler::handleConnectionError()
 {
 	numberOfDHCPRequests++;
 
-	if(numberOfDHCPRequests == 10)
+	if(numberOfDHCPRequests == dataNotReceivedTreshold)
 	{
 		dataNotReceived = true;
 		numberOfDHCPRequests = 0;

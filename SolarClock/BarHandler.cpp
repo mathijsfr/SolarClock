@@ -30,21 +30,18 @@ int BarHandler::CalculateSteps(int energy)
 
 void BarHandler::CalculateSteps(const int* energies, int* steps, int count)
 {
-	if (energies == NULL || count <= 0)
+	if (energies != NULL || count > 0)
 	{
-		return;
-	}
-
-	for (int i = 0; i < count; ++i)
-	{
-		steps[i] = CalculateSteps(energies[i]);
+		for (int i = 0; i < count; ++i)
+		{
+			steps[i] = CalculateSteps(energies[i]);
+		}
 	}
 }
 
 void BarHandler::ResetBar(int motorIndex)
 {
 	dataHandler.RetreiveLengths(&motors[motorIndex], 1);
-	Serial.println(motors[motorIndex]->GetSteps());
 	motors[motorIndex]->SetDirection(Backward);
 	motors[motorIndex]->MotorOnForSteps(motors[motorIndex]->GetSteps());
 	
@@ -61,9 +58,8 @@ void BarHandler::ResetBars(int count)
 
 void BarHandler::SetBar(int energy, int motorIndex)
 {
-	int steps = CalculateSteps(energy);
 	motors[motorIndex]->SetDirection(Forward);
-	motors[motorIndex]->MotorOnForSteps(steps);
+	motors[motorIndex]->MotorOnForSteps(CalculateSteps(energy));
 	dataHandler.StoreLength(motors[motorIndex]);
 }
 

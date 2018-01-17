@@ -1,14 +1,18 @@
+#include <QueueList.h>
+
 #include "SolarClock.h"
 #include "CommunicationHandler.h"
 #include "BarHandler.h"
 #include "WatchDogTimer.h"
 #include "Timer.h"
 
+#include <QueueList.h>
+
 #define MotorCount 12
 #define TimerIntervalInMillis 10
 
 String server("virtueusage.azurewebsites.net");
-byte mac[6] = {0x90, 0xA2, 0xDA, 0x0D, 0x1A, 0x6A};
+byte mac[macLength] = { 0x90, 0xA2, 0xDA, 0x0D, 0x1A, 0x6A };
 MotorPins motorPins[MotorCount] = {	{ 31, 30, 29, 28 }, // motor 1
 									{ 25, 24, 23, 22 }, // motor 2
 									{ 1, 2, 3, 4 }, // motor 3
@@ -32,7 +36,9 @@ Timer* timer;
 
 SolarClock* solarClock;
 
-bool timerInterruptTicked;
+QueueList <Events> eventsQueue;
+
+bool timerTicked;
 
 void setup()
 {
@@ -54,72 +60,79 @@ void setup()
 	solarClock = new SolarClock(*barHandler, *communicationHandler, *watchDogTimer);
 
 	timerInterruptTicked = false;
-	
 	solarClock->SetUp();
 }
 
 void loop()
 {
-	Events ev = GetEvent();
-	solarClock->HandleEvent(ev);
+	if (eventsQueue.isEmpty())
+	{
+		GetEvent();
+	}
+	else
+	{
+		solarClock->HandleEvent(eventsQueue.peek());
+		eventsQueue.pop();
+	}
 
-	checkTimerInterupt();
+
+	checkTimer();
 }	
 
-Events GetEvent()
+void GetEvent()
 {
+Serial.println("..");
 	if (watchDogTimer->GetWatchDogTicked())
 	{
 		watchDogTimer->SetWatchDogTicked(false);
 		if (watchDogTimer->GetWatchDogCounter() == 0)
 		{
-			Serial.println("GetWatchDogCounter");
-			return EV_WATCHDOG_DONE;
+Serial.println("GetWatchDogCounter");
+delay(2000000);
+			eventsQueue.push(EV_WATCHDOG_DONE);
 		}
 		else
 		{
-			Serial.println("watchDogTimer");
+Serial.println("watchDogTimer");
 			
-			return EV_WATCHDOG_TICKED;
+			eventsQueue.push(EV_WATCHDOG_TICKED);
 		}
 	}
 
 	if (communicationHandler->GetDataNotReceived())
 	{
-		Serial.println("GetDataNotReceived");
+Serial.println("GetDataNotReceived");
 		communicationHandler->SetDataNotReceived(false);
-		return EV_DATA_NOT_RECEIVED;
+		eventsQueue.push(EV_DATA_NOT_RECEIVED);
 	}
 	
 	if (communicationHandler->GetDataReceived())
 	{
-		Serial.println("GetDataReceived");
+Serial.println("GetDataReceived");
 		communicationHandler->SetDataReceived(false);
-		return EV_DATA_RECEIVED;
+		eventsQueue.push(EV_DATA_RECEIVED);
 	}
 	
 	if (barHandler->GetBarsReset())
 	{
-		Serial.println("GetBarsReset");
+Serial.println("GetBarsReset");
 		barHandler->SetBarsReset(false);
-		return EV_CLOCK_INITIALIZED;
+		eventsQueue.push(EV_CLOCK_INITIALIZED);
 	}
 
 
-	if (timerInterruptTicked)
+	if (timerTicked)
 	{
-		Serial.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-		timerInterruptTicked = false;
-		return EV_TIME_UP;
+Serial.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+		timerTicked = false;
+		eventsQueue.push(EV_TIME_UP);
 	}
-
-	return NO_EVENT;
 }
 
-void checkTimerInterupt()
+void checkTimer()
 {
-	if(timer->TimeIsPast())
+	if(timer->IsTimePast())
 	{
-		timerInterruptTicked = true;
+		timerTicked = true;
 	}
 }

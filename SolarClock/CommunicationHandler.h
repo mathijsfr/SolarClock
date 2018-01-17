@@ -11,6 +11,8 @@
 #define MOTORCOUNT 12
 #define BUFFER_SIZE 2500
 
+#define macLength 6
+
 class CommunicationHandler : public iCommunicationHandler
 {
 public:
@@ -41,7 +43,7 @@ private:
     int energies[MOTORCOUNT];
     bool isAllowedToRequestEnergy;
 
-    byte mac[6]; //Mac-Address Ethernet Shield
+    byte mac[macLength]; //Mac-Address Ethernet Shield
     String server;
     EthernetClient client;
     char websiteData[BUFFER_SIZE];

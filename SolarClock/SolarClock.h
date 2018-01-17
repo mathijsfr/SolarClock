@@ -19,8 +19,6 @@ public:
     void HandleEvent(Events ev);
     States HandleInitializeClockState(Events ev);
     States HandleRequestEnergyState(Events ev);
-    States HandleDisplayEnergyState(Events ev);
-    States HandleRequestTimeState(Events ev);
     States HandleWatchDogHandlingState(Events ev);
 
 private:

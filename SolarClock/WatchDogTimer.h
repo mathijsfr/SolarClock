@@ -25,6 +25,8 @@ private:
 
     int watchDogCounter;
     bool watchDogTicked;
+
+    void SetUp();
 };
 
 

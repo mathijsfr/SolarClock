@@ -8,8 +8,7 @@ enum Events
     EV_CLOCK_INITIALIZED,
     EV_WATCHDOG_DONE,
     EV_WATCHDOG_TICKED,
-    EV_TIME_UP,
-    NO_EVENT
+    EV_TIME_UP
 };
 
 #endif

@@ -7,7 +7,7 @@ Timer::Timer(int intervalMillis)
 	//Do nothing
 }
 
-bool Timer::TimeIsPast()
+bool Timer::IsTimePast()
 {
 	if((millis() - previousMillis) >= interval)
 	{

@@ -10,7 +10,12 @@ WatchDogTimer::WatchDogTimer()
 	, watchDogTicked(false)
 {
 	watchDogTimer = this;
+	SetUp();
+	SetSleepMode(false);
+}
 
+void WatchDogTimer::SetUp()
+{
 	cli();
 
 	//Set Power Down mode
@@ -22,18 +27,18 @@ WatchDogTimer::WatchDogTimer()
 	WDTCSR = 0x61;
 
 	sei();
-
-	SetSleepMode(false);
 }
 
 void WatchDogTimer::UpdateWatchDogCounter()
 {
+Serial.println("calculate");
 	watchDogCounter--;
 }
 
 
 void WatchDogTimer::CalculateWatchDog(LocalTime localTime)
 {
+Serial.println("calculate");
 	int amountOfSeconds = HOUR_IN_SECONDS - (localTime.minutes * 60 + localTime.seconds);
 
 	watchDogCounter = 1; //amountOfSeconds / POWERDOWNTIME_IN_SECONDS;
@@ -41,6 +46,7 @@ void WatchDogTimer::CalculateWatchDog(LocalTime localTime)
 
 void WatchDogTimer::EnableWatchDog()
 {
+Serial.println("enable");
 	SetSleepMode(true);
 	sleep_cpu();
 }
@@ -57,19 +63,21 @@ bool WatchDogTimer::GetWatchDogTicked() const
 
 void WatchDogTimer::SetWatchDogTicked(bool watchDogTicked)
 {
+Serial.print("set ticked ");
+Serial.println(watchDogTicked);
 	this->watchDogTicked = watchDogTicked;
 }
 
 void WatchDogTimer::SetSleepMode(bool enableSleepMode)
 {
-  if (enableSleepMode)
-  {
-    SMCR |= _BV(SE);
-  }
-  else
-  {
-    SMCR &= ~_BV(SE);
-  }
+	if (enableSleepMode)
+	{
+		SMCR |= _BV(SE);
+	}
+	else
+	{
+		SMCR &= ~_BV(SE);
+	}
 }
 
 //Interrupt
