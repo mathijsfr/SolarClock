@@ -2,7 +2,7 @@
 #define M_COMMUNICATION_HANDLER_H
 
 #include <gmock/gmock.h>
-#include "LocalTime"
+#include "LocalTime.h"
 #include "iCommunicationHandler.h"
 
 class mCommunicationHandler : public iCommunicationHandler
