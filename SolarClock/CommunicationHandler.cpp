@@ -1,9 +1,5 @@
 #include "CommunicationHandler.h"
 
-#define timeOut 5000
-#define dataNotReceivedTreshold 10
-#define hoursInClock 12
-
 CommunicationHandler::CommunicationHandler(byte* macAddress, String server)
 	: dataReceived(false)
 	, dataNotReceived(false)
@@ -82,7 +78,7 @@ bool CommunicationHandler::GetIsAllowedToRequestEnergy()
 			isAllowedToRequestEnergy = true;
 		}
 	}
-/////////////////////////////
+
 	return true;
 }
 
@@ -104,13 +100,8 @@ void CommunicationHandler::Update()
 			}
 		}
 	}
-	else
-	{
-		handleConnectionError();
-		return;
-	}
 
-	dataNotReceived = true;
+	handleConnectionError();
 }
 
 /*PRIVATE*/
@@ -218,7 +209,7 @@ void CommunicationHandler::handleConnectionError()
 {
 	numberOfDHCPRequests++;
 
-	if(numberOfDHCPRequests == dataNotReceivedTreshold)
+	if(numberOfDHCPRequests >= dataNotReceivedTreshold)
 	{
 		dataNotReceived = true;
 		numberOfDHCPRequests = 0;

@@ -53,6 +53,8 @@ void BarHandler::ResetBars(int count)
 	{
 		ResetBar(i);
 	}
+
+	barsReset = true;
 }
 
 void BarHandler::SetBar(int energy, int motorIndex)

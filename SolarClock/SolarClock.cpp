@@ -19,6 +19,9 @@ void SolarClock::SetUp()
 
 States SolarClock::HandleInitializeClockState(Events ev)
 {
+Serial.print("State_InitializeClock : ");
+Serial.println(ev);
+
     States result = State_InitializeClock;
 
     switch (ev)
@@ -26,14 +29,11 @@ States SolarClock::HandleInitializeClockState(Events ev)
         case EV_CLOCK_INITIALIZED:
         {
             result = State_RequestEnergy;
-Serial.println("EV_CLOCK_INITIALIZED");
-Serial.println("State_RequestEnergy");
             break;
         }
         case EV_TIME_UP:
         {
             communicationHandler.Update();
-Serial.println("EV_TIME_UP");
             break;
         }
         case EV_DATA_RECEIVED:
@@ -41,7 +41,6 @@ Serial.println("EV_TIME_UP");
         	int steps[MotorCount];
     		barHandler.CalculateSteps(communicationHandler.GetEnergies(), steps, MotorCount);
     		barHandler.SetBars(steps, MotorCount);
-Serial.println("EV_DATA_RECEIVED");
         	break;
        	}
         default:
@@ -54,46 +53,52 @@ Serial.println("EV_DATA_RECEIVED");
 
 States SolarClock::HandleRequestEnergyState(Events ev)
 {
+Serial.print("State_RequestEnergy : ");
+Serial.println(ev);
+
     States result = State_RequestEnergy;
 
     switch (ev)
     {
         case EV_DATA_RECEIVED:
         {
-Serial.println("EV_DATA_RECEIVED");
+Serial.println("SetIsAllowedToRequestEnergy=False");
             communicationHandler.SetIsAllowedToRequestEnergy(false);
 
+Serial.print("ResetBar, motor: ");
             int motorIndex = communicationHandler.GetCurrentMotor();
+
+Serial.println(motorIndex);
             barHandler.ResetBar(motorIndex);
 
+Serial.println("GetEnergies");
             int energy = communicationHandler.GetEnergies()[motorIndex];
             int steps = barHandler.CalculateSteps(energy);
 
+Serial.println("SetBar");
             barHandler.SetBar(motorIndex, steps);
 
+Serial.println("CalculateWatchdog");
             watchDogTimer.CalculateWatchDog(communicationHandler.GetLocalTime());
 
+Serial.println("Result=State_WatchDogHandling");
             result = State_WatchDogHandling;
-Serial.println("State_WatchDogHandling");
             watchDogTimer.EnableWatchDog();
             break;
 		}
         case EV_DATA_NOT_RECEIVED:
         {
-Serial.println("EV_DATA_NOT_RECEIVED");
             communicationHandler.SetIsAllowedToRequestEnergy(false);
             barHandler.ResetBars(MotorCount);
             result = State_InitializeClock;
-Serial.println("State_InitializeClock");
             break;
         }
         case EV_TIME_UP:
         {
-Serial.println("EV_TIME_UP");
             if (communicationHandler.GetIsAllowedToRequestEnergy())
             {
             	communicationHandler.Update();
-            }
+            }       
             break;
         }
         default:
@@ -106,19 +111,19 @@ Serial.println("EV_TIME_UP");
 
 States SolarClock::HandleWatchDogHandlingState(Events ev)
 {
+Serial.print("State_WatchDogHandling : ");
+Serial.println(ev);
+
     States result = State_WatchDogHandling;
     switch (ev)
     {
         case EV_WATCHDOG_DONE:
         {
-Serial.println("EV_WATCHDOG_DONE");
             result = State_RequestEnergy;
-Serial.println("State_RequestEnergy");
             break;
         }
         case EV_WATCHDOG_TICKED:
         {
-Serial.println("EV_WATCHDOG_TICKED");
             watchDogTimer.UpdateWatchDogCounter();
             watchDogTimer.EnableWatchDog();
             break;

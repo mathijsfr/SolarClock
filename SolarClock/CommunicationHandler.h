@@ -13,6 +13,10 @@
 
 #define macLength 6
 
+#define timeOut 5000
+#define dataNotReceivedTreshold 10
+#define hoursInClock 12
+
 class CommunicationHandler : public iCommunicationHandler
 {
 public:

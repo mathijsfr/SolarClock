@@ -10,7 +10,7 @@ WatchDogTimer::WatchDogTimer()
 	, watchDogTicked(false)
 {
 	watchDogTimer = this;
-	SetUp();
+	//SetUp();
 	SetSleepMode(false);
 }
 
@@ -63,8 +63,6 @@ bool WatchDogTimer::GetWatchDogTicked() const
 
 void WatchDogTimer::SetWatchDogTicked(bool watchDogTicked)
 {
-Serial.print("set ticked ");
-Serial.println(watchDogTicked);
 	this->watchDogTicked = watchDogTicked;
 }
 
