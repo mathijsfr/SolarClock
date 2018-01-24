@@ -4,7 +4,7 @@ This repository contains the code for the clock that will show the energy usage 
 
 ### note
 
-The config file that can be found in this repository contains all the variables that need to be changed when creating the clock. This contains:
+The config and the .ino file that can be found in this repository contains all the variables that need to be changed when creating the clock. This contains:
 
 - **server**, the adress of the website that the data is stored on.
 - **mac**, mac is the mac adress for the communication. This depends on the ethernet shield that is used.
