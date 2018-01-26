@@ -9,7 +9,7 @@ The config and the .ino file that can be found in this repository contains all t
 - **server**, the adress of the website that the data is stored on.
 - **mac**, mac is the mac adress for the communication. This depends on the ethernet shield that is used.
 - **motorPins** array, this array contains structs of the motor pins of every motor. This needs to be changed according to your wiring.
-- **MULTIPLIER**, this is the amount 
+- **MULTIPLIER**, this is the scale the bar will extract behind the clock. 
 - **GEAR_RADIUS**, the radius of the gear that will be used on the gear rack with the motor to extend and retract the bars on the clock.
 - **STEPS_BAR_VISUAL**, the amount of steps that the bar needs to extend to be visual behind the edge of the clock.
 
